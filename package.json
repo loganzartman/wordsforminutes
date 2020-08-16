@@ -11,6 +11,7 @@
     "start": "http-server . -c-1 -o"
   },
   "dependencies": {
+    "htm": "^3.0.4",
     "preact": "^10.4.7"
   },
   "devDependencies": {
