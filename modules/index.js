@@ -1,4 +1,4 @@
-import {html, render, useState} from "../node_modules/htm/preact/standalone.module.js";
+import {html, render, useState, useMemo} from "../node_modules/htm/preact/standalone.module.js";
 import {ChainBuilder, TextGenerator} from "./markov.js";
 import {normalizeSentence} from "./text.js";
 import corpus from "./pride_and_prejudice.js";
@@ -7,23 +7,40 @@ import corpus from "./pride_and_prejudice.js";
 const words = corpus
   .toLocaleLowerCase()
   .replace(/[\n\r]+/, "")
-  .split(/\W+/);
-
-// really dumb markov chain building
-const builder = new ChainBuilder(3);
-words.forEach(word => builder.consume(word));
-
-const generator = new TextGenerator(builder.chain, builder.order);
+  .split("");
 
 const App = (props) => {
-  const generateText = () => normalizeSentence(Array.from(generator.getSentence(100)));
+  const [coherence, setCoherence] = useState(3);
+  const generator = useMemo(() => {
+    // really dumb markov chain building
+    const builder = new ChainBuilder(coherence);
+    words.forEach(word => builder.consume(word));
+
+    return new TextGenerator(builder.chain, builder.order);
+  }, [coherence]);
+
+  const generateText = () => normalizeSentence(Array.from(generator.getSentence(500)).join(""));
   const [text, setText] = useState(generateText());
 
   return html`
-    <div>
-      <h1>computer dreams of news</h1>
+    <div style=${{
+      display: "flex",
+      flexDirection: "column",
+      maxWidth: "25em"
+    }}>
+      <h1>computer dreams of words</h1>
+      <div style=${{display: "flex", flexDirection: "row"}}>
+        <input name="coherence" 
+          style=${{flex: 1}}
+          type="range" 
+          min="1" max="10" step="1" 
+          value=${coherence}  
+          onchange=${(event) => setCoherence(event.target.value)}
+        />
+        <label for="coherence">coherence: ${coherence}</label>
+      </div>
       <button onClick=${() => setText(generateText())}>aaah</button>
-      <div style="max-width: 30em">
+      <div>
         ${text}
       </div>
     </div>

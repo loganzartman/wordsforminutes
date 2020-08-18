@@ -1,5 +1,5 @@
-export function normalizeSentence(sentenceArray) {
-  return sentenceArray.join(" ")
+export function normalizeSentence(sentence) {
+  return sentence
     .replace(/\s(['-])\s/g, "$1") // fix in-word punctuation
     .replace(/\s+([,.!?])/g, "$1") // fix punctuation
     .replace(/"\s*([^"]*)\s*"/g, '"$1"') // fix quotes
