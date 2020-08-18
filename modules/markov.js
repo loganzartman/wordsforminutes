@@ -51,39 +51,72 @@ export class Chain {
   }
 }
 
-export function randomWord(chain, previous=null) {
-  if (chain.empty()) {
-    throw new Error("Empty chain provided!");
+export class ChainBuilder {
+  constructor(order) {
+    this.order = order;
+    this.chain = new Chain();
+    this.context = [];
   }
 
-  // if no context, pick a starting word at random
-  if (!previous || !chain.has(previous)) {
-    const starters = Array.from(chain.transitionCount.keys());
-    return starters[Math.floor(Math.random() * starters.length)];
-  }
-  
-  // some words have never been followed by anything
-  const options = chain.transitionsFor(previous);
-  if (options.length === 0) {
-    return null;
-  }
-
-  const choice = Math.random();
-  let cumulativeProb = 0;
-  for (let [b, prob] of options) {
-    cumulativeProb += prob;
-    if (choice < cumulativeProb) {
-      return b;
+  consume(word) {
+    if (this.context.length < this.order) {
+      this.context.push(word);
+      return;
     }
+    this.chain.add(JSON.stringify(this.context), word);
+    this.context.shift();
+    this.context.push(word);
   }
-  throw new Error("Probabilities didn't sum to 1!");
 }
 
-export function randomSentence(chain, numWords) {
-  const first = chain.has(".") ? randomWord(chain, ".") : randomWord(chain);
-  const sentence = [first];
-  for (let i = 1; i < numWords; ++i) {
-    sentence.push(randomWord(chain, sentence[i - 1]));
+export class TextGenerator {
+  constructor(chain, order) {
+    this.chain = chain;
+    this.order = order;
+    this.context = [];
   }
-  return sentence;
+
+  updateContext(word) {
+    if (this.context.length >= this.order)
+      this.context.shift();
+    this.context.push(word);
+  }
+
+  *getStarter() {
+    const starters = Array.from(this.chain.transitionCount.keys());
+    const starter = JSON.parse(starters[Math.floor(Math.random() * starters.length)]);
+    starter.forEach(word => this.updateContext(word));
+    yield* starter;
+  }
+
+  *getWord() {
+    if (this.context.length < this.order) {
+      yield* this.getStarter();
+      return;
+    }
+    
+    const transitions = this.chain.transitionsFor(JSON.stringify(this.context));
+    if (transitions.length === 0) {
+      yield* this.getStarter();
+      return;
+    }
+    
+    console.log("hit");
+    const choice = Math.random();
+    let cumulativeProb = 0;
+    for (let [b, prob] of transitions) {
+      cumulativeProb += prob;
+      if (choice < cumulativeProb) {
+        this.updateContext(b);
+        yield b;
+        return;
+      }
+    }
+    throw new Error("Probabilities didn't sum to 1!");
+  }
+
+  *getSentence(numWords) {
+    for (let i = 0; i < numWords; ++i)
+      yield* this.getWord();
+  }
 }
