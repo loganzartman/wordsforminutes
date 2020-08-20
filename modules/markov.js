@@ -1,60 +1,75 @@
 export class Chain {
-  constructor() {
-    // A -> B -> count
-    this.transitionCount = new Map();
+  /**
+   * @param order the length of context
+   */
+  constructor(order) {
+    if (order < 1)
+      throw new Error(`order must be >= 1, was ${order}`);
 
-    // A -> sum(count) for all B
-    this.totalCount = new Map();
+    this.order = order;
+
+    // A... -> B -> count
+    this.data = new Map();
   }
 
   empty() {
-    return this.transitionCount.size === 0;
+    return this.data.size === 0;
   }
 
-  has(word) {
-    return this.transitionCount.has(word);
-  }
-
-  add(a, b) {
-    if (!this.has(a)) {
-      this.transitionCount.set(a, new Map());
-      this.totalCount.set(a, 0);
-    }
-    const bMap = this.transitionCount.get(a);
+  has(context) {
+    if (context.length !== this.order)
+      throw new Error(`Got context with length ${context.length}, should be ${this.order}`);
     
-    if (!bMap.has(b)) {
-      bMap.set(b, 0);
+    // descend tree
+    let map = this.data;
+    for (let part of context) {
+      map = map.get(part);
+      if (!map)
+        return false;
     }
-    bMap.set(b, bMap.get(b) + 1);
-    this.totalCount.set(a, this.totalCount.get(a) + 1);
+    return true;
   }
 
-  transitionsFor(a) {
-    if (!this.has(a)) {
-      return [];
+  add(context, word) {
+    if (context.length !== this.order)
+      throw new Error(`Got context with length ${context.length}, should be ${this.order}`);
+
+    // build tree branch
+    let map = this.data;
+    for (let part of context) {
+      if (!map.has(part))
+        map.set(part, new Map());
+      map = map.get(part);
     }
-    const total = this.totalCount.get(a);
-    return Array.from(this.transitionCount.get(a).entries())
-      .map(([b, count]) => [b, count / total]);
+
+    // increment count
+    if (!map.has(word))
+      map.set(word, 0);
+    map.set(word, map.get(word) + 1);
   }
 
-  toString() {
-    const lines = []
-    for (let [a, bMap] of this.transitionCount.entries()) {
-      const aTotal = this.totalCount.get(a);
-      lines.push(`${a} -> ${aTotal}`);
-      for (let [b, count] of bMap.entries()) {
-        lines.push(`  ${b} -> ${count}`);
-      }
+  transitionsFor(context) {
+    if (context.length !== this.order)
+      throw new Error(`Got context with length ${context.length}, should be ${this.order}`);
+
+    // descend tree
+    let map = this.data;
+    for (let part of context) {
+      map = map.get(part);
+      if (!map)
+        return [];
     }
-    return lines.join("\n");
+
+    const entries = Array.from(map.entries());
+    const total = entries.reduce((sum, [_, count]) => sum + count, 0);
+    return entries.map(([word, count]) => [word, count / total]);
   }
 }
 
 export class ChainBuilder {
   constructor(order) {
     this.order = order;
-    this.chain = new Chain();
+    this.chain = new Chain(order);
     this.context = [];
   }
 
@@ -63,39 +78,42 @@ export class ChainBuilder {
       this.context.push(word);
       return;
     }
-    this.chain.add(JSON.stringify(this.context), word);
+    this.chain.add(this.context, word);
     this.context.shift();
     this.context.push(word);
   }
 }
 
 export class TextGenerator {
-  constructor(chain, order) {
+  constructor(chain) {
     this.chain = chain;
-    this.order = order;
     this.context = [];
   }
 
   updateContext(word) {
-    if (this.context.length >= this.order)
+    if (this.context.length >= this.chain.order)
       this.context.shift();
     this.context.push(word);
   }
 
   *getStarter() {
-    const starters = Array.from(this.chain.transitionCount.keys());
-    const starter = JSON.parse(starters[Math.floor(Math.random() * starters.length)]);
-    starter.forEach(word => this.updateContext(word));
-    yield* starter;
+    let map = this.chain.data;
+    for (let i = 0; i < this.chain.order; ++i) {
+      const keys = Array.from(map.keys());
+      const selected = keys[Math.floor(Math.random() * keys.length)];
+      map = map.get(selected);
+      this.updateContext(selected);
+      yield selected;
+    }
   }
 
   *getWord() {
-    if (this.context.length < this.order) {
+    if (this.context.length < this.chain.order) {
       yield* this.getStarter();
       return;
     }
     
-    const transitions = this.chain.transitionsFor(JSON.stringify(this.context));
+    const transitions = this.chain.transitionsFor(this.context);
     if (transitions.length === 0) {
       yield* this.getStarter();
       return;

@@ -5,21 +5,23 @@ import corpus from "./pride_and_prejudice.js";
 
 // really bad splitting into words
 const words = corpus
-  .toLocaleLowerCase()
-  .replace(/[\n\r]+/, "")
+  .replace(/[\n\r]+/g, "")
+  .replace(/[\d\[\]()_]/g, "")
   .split("");
 
+debugger;
+
 const App = (props) => {
-  const [coherence, setCoherence] = useState(3);
+  const [coherence, setCoherence] = useState(8);
   const generator = useMemo(() => {
     // really dumb markov chain building
     const builder = new ChainBuilder(coherence);
     words.forEach(word => builder.consume(word));
 
-    return new TextGenerator(builder.chain, builder.order);
+    return new TextGenerator(builder.chain);
   }, [coherence]);
 
-  const generateText = () => normalizeSentence(Array.from(generator.getSentence(500)).join(""));
+  const generateText = () => Array.from(generator.getSentence(500)).join("");
   const [text, setText] = useState(generateText());
 
   return html`
@@ -33,9 +35,9 @@ const App = (props) => {
         <input name="coherence" 
           style=${{flex: 1}}
           type="range" 
-          min="1" max="10" step="1" 
+          min="1" max="20" step="1" 
           value=${coherence}  
-          onchange=${(event) => setCoherence(event.target.value)}
+          onchange=${(event) => setCoherence(Number.parseInt(event.target.value))}
         />
         <label for="coherence">coherence: ${coherence}</label>
       </div>
