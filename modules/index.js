@@ -5,7 +5,7 @@ import corpus from "./pride_and_prejudice.js";
 
 // really bad splitting into words
 const words = corpus
-  .replace(/[\n\r]+/g, "")
+  .replace(/[\n\r]+/g, " ")
   .replace(/[\d\[\]()_]/g, "")
   .split("");
 
