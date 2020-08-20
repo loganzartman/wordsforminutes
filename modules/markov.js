@@ -8,7 +8,6 @@ export class Chain {
 
     this.order = order;
 
-    // A... -> B -> count
     this.data = new Map();
   }
 
@@ -23,7 +22,7 @@ export class Chain {
     // descend tree
     let map = this.data;
     for (let part of context) {
-      map = map.get(part);
+      map = map.get(part)[0];
       if (!map)
         return false;
     }
@@ -38,14 +37,16 @@ export class Chain {
     let map = this.data;
     for (let part of context) {
       if (!map.has(part))
-        map.set(part, new Map());
-      map = map.get(part);
+        map.set(part, [new Map(), 0]);
+      const [nextMap, count] = map.get(part);
+      map.set(part, [nextMap, count + 1]);
+      map = nextMap;
     }
 
     // increment count
     if (!map.has(word))
-      map.set(word, 0);
-    map.set(word, map.get(word) + 1);
+      map.set(word, [null, 0]);
+    map.set(word, [null, map.get(word)[0] + 1]);
   }
 
   transitionsFor(context) {
@@ -55,14 +56,14 @@ export class Chain {
     // descend tree
     let map = this.data;
     for (let part of context) {
-      map = map.get(part);
+      map = map.get(part)[0];
       if (!map)
         return [];
     }
 
     const entries = Array.from(map.entries());
-    const total = entries.reduce((sum, [_, count]) => sum + count, 0);
-    return entries.map(([word, count]) => [word, count / total]);
+    const total = entries.reduce((sum, [_, [__, count]]) => sum + count, 0);
+    return entries.map(([word, [_, count]]) => [word, count / total]);
   }
 }
 
@@ -101,7 +102,7 @@ export class TextGenerator {
     for (let i = 0; i < this.chain.order; ++i) {
       const keys = Array.from(map.keys());
       const selected = keys[Math.floor(Math.random() * keys.length)];
-      map = map.get(selected);
+      map = map.get(selected)[0];
       this.updateContext(selected);
       yield selected;
     }
