@@ -4,10 +4,7 @@ _statistic-driven typing practice_
 
 ## building
 
-This project is build-free! It depends on [`yarn`][yarn] for development.
+This project is build-free! It uses unpkg for dependencies, but you could replace that with local copies.
 
-1. `yarn install` to install dependencies
-2. `yarn start` to run an HTTP server for development.
-3. Serve the root directory in production!
+Simply serve the root directory in production!
 
-[yarn]: https://yarnpkg.com/getting-started/install
