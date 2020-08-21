@@ -1,7 +1,7 @@
 import {useState, useMemo, useEffect, useCallback} from "../node_modules/htm/preact/standalone.module.js";
 import {ChainBuilder, TextGenerator} from "./markov.js";
 import {normalizeSentence} from "./text.js";
-import corpus from "./pride_and_prejudice.js";
+import corpus from "./computer.js";
 
 // really bad splitting into words
 const sourceWords = corpus
@@ -30,12 +30,12 @@ export default function useWords({coherence=8, length=100, punctuation=true, cap
   	[generator, punctuation, caps]
  	);
 
+	const [words, setWords] = useState();
+
  	useEffect(
  		() => setWords(generate()),
- 		[punctuation, caps]
+ 		[coherence, punctuation, caps]
  	);
-
-	const [words, setWords] = useState();
 	
 	const refreshWords = () => setWords(generate());
 	return [words, refreshWords];
