@@ -1,4 +1,4 @@
-import {html, render} from "../node_modules/htm/preact/standalone.module.js";
+import {html} from "https://unpkg.com/htm/preact/standalone.mjs?module";
 
 export default (props) => {
   const handleInput = (event) => {

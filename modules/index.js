@@ -1,4 +1,4 @@
-import {html, render, useState} from "../node_modules/htm/preact/standalone.module.js";
+import {render, html, useState} from "https://unpkg.com/htm/preact/standalone.mjs?module";
 import useWords from "./useWords.js";
 import TextInput from "./TextInput.js";
 
