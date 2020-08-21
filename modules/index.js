@@ -2,14 +2,13 @@ import {html, render, useState, useMemo} from "../node_modules/htm/preact/standa
 import {ChainBuilder, TextGenerator} from "./markov.js";
 import {normalizeSentence} from "./text.js";
 import corpus from "./pride_and_prejudice.js";
+import TextInput from "./TextInput.js";
 
 // really bad splitting into words
 const words = corpus
   .replace(/[\n\r]+/g, " ")
   .replace(/[\d\[\]()_]/g, "")
   .split("");
-
-debugger;
 
 const App = (props) => {
   const [coherence, setCoherence] = useState(8);
@@ -25,12 +24,8 @@ const App = (props) => {
   const [text, setText] = useState(generateText());
 
   return html`
-    <div style=${{
-      display: "flex",
-      flexDirection: "column",
-      maxWidth: "25em"
-    }}>
-      <h1>computer dreams of words</h1>
+    <div class="main-content">
+      <h1 class="title">statistype</h1>
       <div style=${{display: "flex", flexDirection: "row"}}>
         <input name="coherence" 
           style=${{flex: 1}}
@@ -41,10 +36,11 @@ const App = (props) => {
         />
         <label for="coherence">coherence: ${coherence}</label>
       </div>
-      <button onClick=${() => setText(generateText())}>aaah</button>
-      <div>
+      <button class="reset-button" onClick=${() => setText(generateText())}>aaah</button>
+      <div class="words-area">
         ${text}
       </div>
+      <${TextInput}/>
     </div>
   `;
 };
