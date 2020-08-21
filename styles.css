@@ -8,6 +8,10 @@
 	--col-fg: #F2F2F2;
 }
 
+button, label {
+	user-select: none;
+}
+
 html, body {
 	font-family: "Merriweather", serif;
 	font-weight: 500;
