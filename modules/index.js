@@ -1,27 +1,14 @@
-import {html, render, useState, useMemo} from "../node_modules/htm/preact/standalone.module.js";
-import {ChainBuilder, TextGenerator} from "./markov.js";
-import {normalizeSentence} from "./text.js";
-import corpus from "./pride_and_prejudice.js";
+import {html, render, useState} from "../node_modules/htm/preact/standalone.module.js";
+import useWords from "./useWords.js";
 import TextInput from "./TextInput.js";
-
-// really bad splitting into words
-const words = corpus
-  .replace(/[\n\r]+/g, " ")
-  .replace(/[\d\[\]()_]/g, "")
-  .split("");
 
 const App = (props) => {
   const [coherence, setCoherence] = useState(8);
-  const generator = useMemo(() => {
-    // really dumb markov chain building
-    const builder = new ChainBuilder(coherence);
-    words.forEach(word => builder.consume(word));
 
-    return new TextGenerator(builder.chain);
-  }, [coherence]);
-
-  const generateText = () => Array.from(generator.getSentence(500)).join("");
-  const [text, setText] = useState(generateText());
+  const [words, refreshWords] = useWords({
+    coherence,
+    length: 500
+  });
 
   return html`
     <div class="main-content">
@@ -36,9 +23,9 @@ const App = (props) => {
         />
         <label for="coherence">coherence: ${coherence}</label>
       </div>
-      <button class="reset-button" onClick=${() => setText(generateText())}>aaah</button>
+      <button class="reset-button" onClick=${() => refreshWords()}>aaah</button>
       <div class="words-area">
-        ${text}
+        ${words}
       </div>
       <${TextInput}/>
     </div>
