@@ -1,4 +1,4 @@
-import {render, html, useState} from "https://unpkg.com/htm/preact/standalone.mjs?module";
+import {render, html, useState, useEffect} from "https://unpkg.com/htm/preact/standalone.mjs?module";
 import TextInput from "./TextInput.js";
 import WordScroller from "./WordScroller.js";
 import useWordGetter from "./useWordGetter.js";
@@ -15,7 +15,7 @@ export default function TypingTester() {
     length: 500
   });
 
-  const [currentWords, setCurrentWords] = useState(Array.from({length: 8}, _ => wordGetter()));
+  const [currentWords, setCurrentWords] = useState([]);
   const [prevWord, setPrevWord] = useState("");
 
   const handleWord = (word) => {
@@ -25,6 +25,11 @@ export default function TypingTester() {
     ]);
     setPrevWord(word);
   };
+
+  useEffect(() => {
+    setCurrentWords(
+      Array.from({length: 8}, _ => wordGetter()));
+  }, [wordGetter]);
 
   const controls = html`
     <button class="reset-button">reset</button>

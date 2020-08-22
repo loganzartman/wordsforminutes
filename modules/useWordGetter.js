@@ -1,7 +1,7 @@
 import {useState, useMemo, useEffect, useCallback} from "https://unpkg.com/htm/preact/standalone.mjs?module";
 import {ChainBuilder, TextGenerator} from "./markov.js";
 import {normalizeSentence} from "./text.js";
-import corpus from "./computer.js";
+import corpus from "./pride_and_prejudice.js";
 
 // really bad splitting into words
 const sourceWords = corpus
