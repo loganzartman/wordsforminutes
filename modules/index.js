@@ -4,7 +4,7 @@ import TypingTester from "./TypingTester.js";
 const App = (props) => {
   return html`
     <div class="main-content">
-      <h1 class="title">unboundkeys</h1>
+      <h1 class="title">words for minutes</h1>
       <${TypingTester} />
     </div>
   `;

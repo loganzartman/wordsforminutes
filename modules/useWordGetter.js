@@ -1,13 +1,10 @@
 import {useState, useMemo, useEffect, useCallback} from "https://unpkg.com/htm/preact/standalone.mjs?module";
 import {ChainBuilder, TextGenerator} from "./markov.js";
-import {normalizeSentence} from "./text.js";
-import corpus from "./pride_and_prejudice.js";
+import {normalizeCorpus} from "./text.js";
+import corpus from "./corpus/tao.js";
 
-// really bad splitting into words
-const sourceWords = corpus
-  .replace(/[\n\r]+/g, " ")
-  .replace(/[\d\[\]()_]/g, "")
-  .split("");
+// really bad splitting into characters
+const sourceWords = normalizeCorpus(corpus).split("");
 
 export default function useWordGetter({coherence=8, length=100, punctuation=true, caps=true}={}) {
   const generator = useMemo(() => {

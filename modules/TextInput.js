@@ -1,10 +1,11 @@
-import {html, useState} from "https://unpkg.com/htm/preact/standalone.mjs?module";
+import {html, useState, useRef, useEffect} from "https://unpkg.com/htm/preact/standalone.mjs?module";
 
 const endingSpace = /\p{Zs}$/u;
 
 export default ({onWord}={}) => {
   const placeholder = "type here to start";
   const [showPlaceholder, setShowPlaceholder] = useState(true);
+  const inputRef = useRef();
 
   const handleInput = (event) => {
     if (showPlaceholder)
@@ -20,9 +21,12 @@ export default ({onWord}={}) => {
     }
   };
 
+  useEffect(() => setTimeout(() => inputRef.current.focus(), 100), [inputRef]);
+
   return html`
     <div class="text-input-container">
       <input type="text"
+        ref=${inputRef}
         class="text-input"
         placeholder=${showPlaceholder ? placeholder : ""}
         onInput=${handleInput}
