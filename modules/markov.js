@@ -108,7 +108,7 @@ export class TextGenerator {
     }
   }
 
-  *getWord() {
+  *getToken() {
     if (this.context.length < this.chain.order) {
       yield* this.getStarter();
       return;
@@ -132,6 +132,22 @@ export class TextGenerator {
       }
     }
     throw new Error("Probabilities didn't sum to 1!");
+  }
+
+  *getWord() {
+    // discard starters for better quality
+    while (this.context.length < this.chain.order)
+      for (let _ of this.getStarter()) {};
+
+    // yield items until word separator
+    for (let i = 0; i < 16; ++i) {
+      for (let tok of this.getToken()) {
+        yield tok;
+        if (/\p{Zs}/u.test(tok)) {
+          return;
+        }
+      }
+    }
   }
 
   *getSentence(numWords) {

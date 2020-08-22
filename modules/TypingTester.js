@@ -1,30 +1,33 @@
 import {render, html, useState} from "https://unpkg.com/htm/preact/standalone.mjs?module";
 import TextInput from "./TextInput.js";
 import WordScroller from "./WordScroller.js";
-import useWords from "./useWords.js";
+import useWordGetter from "./useWordGetter.js";
 
 export default function TypingTester() {
   const [coherence, setCoherence] = useState(8);
   const [punctuation, setPunctuation] = useState(true);
   const [caps, setCaps] = useState(true);
 
-  const [words, refreshWords] = useWords({
+  const wordGetter = useWordGetter({
     coherence,
     punctuation,
     caps,
     length: 500
   });
 
-  const [currentWords, setCurrentWords] = useState(["hello", "world", "this", "is", "a", "test"]);
+  const [currentWords, setCurrentWords] = useState(Array.from({length: 8}, _ => wordGetter()));
   const [prevWord, setPrevWord] = useState("");
 
   const handleWord = (word) => {
-    setCurrentWords(currentWords.slice(1));
+    setCurrentWords([
+      ...currentWords.slice(1),
+      wordGetter()
+    ]);
     setPrevWord(word);
   };
 
   const controls = html`
-    <button class="reset-button" onClick=${() => refreshWords()}>reset</button>
+    <button class="reset-button">reset</button>
     <label>
       <input
         type="checkbox"
