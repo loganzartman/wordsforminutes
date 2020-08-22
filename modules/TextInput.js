@@ -1,6 +1,8 @@
 import {html, useState} from "https://unpkg.com/htm/preact/standalone.mjs?module";
 
-export default (props) => {
+const endingSpace = /\p{Zs}$/u;
+
+export default ({onWord}={}) => {
   const placeholder = "type here to start";
   const [showPlaceholder, setShowPlaceholder] = useState(true);
 
@@ -9,7 +11,11 @@ export default (props) => {
       setShowPlaceholder(false);
 
     const text = event.target.value;
-    if (/\p{Zs}$/u.test(text)) {
+    if (endingSpace.test(text)) {
+      if (typeof onWord === "function") {
+        const word = event.target.value.replace(endingSpace, "");
+        onWord(word);
+      }
       event.target.value = "";
     }
   };
