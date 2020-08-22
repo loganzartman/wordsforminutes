@@ -1,0 +1,16 @@
+{
+  "name": "statistype",
+  "version": "1.0.0",
+  "description": "statistic-driven typing practice",
+  "main": "index.js",
+  "repository": "https://github.com/loganzartman/statistype",
+  "author": "Logan Zartman <logan.zartman@utexas.edu>",
+  "license": "Apache 2.0",
+  "private": true,
+  "scripts": {
+    "start": "http-server . -c-1 -o"
+  },
+  "devDependencies": {
+    "http-server": "^0.12.3"
+  }
+}
