@@ -8,16 +8,40 @@
 	--col-fg: #F2F2F2;
 }
 
-button, label {
-	user-select: none;
-}
-
 html, body {
 	font-family: "Merriweather", serif;
 	font-weight: 500;
 
 	background: var(--col-bg);
 	color: var(--col-fg);
+}
+
+button, label {
+	user-select: none;
+}
+
+button {
+	padding: 0.5em 1em;
+
+	font-family: "Inconsolata", monospace;
+	font-weight: 400;
+	font-size: 1.2rem;
+
+	outline: none;
+	border: none;
+	color: var(--col-bg);
+	background: var(--col-a1);
+
+	box-shadow: 0 0 0 0 var(--col-good);
+	transition: box-shadow 0.1s ease-out;
+}
+
+button:hover, button:focus {
+	box-shadow: 0 4px 0 var(--col-good);
+}
+
+button:active {
+	box-shadow: 4px 4px 0 var(--col-good);
 }
 
 .main-content {
@@ -27,22 +51,17 @@ html, body {
 
 .title {
 	color: var(--col-a1);
+
+	text-shadow: 0 0 0 none;
+	transition: text-shadow 0.1s ease-out;
+}
+
+.title:hover {
+	text-shadow: 0 2px 0 var(--col-good);
 }
 
 .words-area {
 	margin: 2rem 0;
-}
-
-.reset-button {
-	padding: 0.5em 1em;
-
-	font-family: "Inconsolata", monospace;
-	font-weight: 400;
-	font-size: 1rem;
-
-	border: none;
-	color: var(--col-bg);
-	background: var(--col-a1);
 }
 
 .text-input-container {
@@ -61,12 +80,18 @@ html, body {
 	border: none;
 	background: none;
 
+	padding: 0.2em 0.4em;
+
 	color: var(--col-good);
-	box-shadow: 0px 0px 0px 3px var(--col-good);
+	box-shadow: 0px 0px 0px 5px var(--col-good), 0px 0px 0px 0px var(--col-a1);
 
 	transition: box-shadow 0.1s ease-out;
 }
 
+.text-input:hover {
+	box-shadow: 0px 0px 0px 7px var(--col-good), 0px 0px 0px 0px var(--col-a1);
+}
+
 .text-input:focus {
-	box-shadow: 0px -1px 0px 5px var(--col-good);
+	box-shadow: 0px 3px 0px 7px var(--col-good), 0px 12px 0px 7px var(--col-a1);
 }

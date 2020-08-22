@@ -36,7 +36,7 @@ const App = (props) => {
 
   return html`
     <div class="main-content">
-      <h1 class="title">statistype</h1>
+      <h1 class="title">unboundkeys</h1>
       <div style=${{display: "flex", flexDirection: "row"}}>
         <input name="coherence" 
           style=${{flex: 1}}
