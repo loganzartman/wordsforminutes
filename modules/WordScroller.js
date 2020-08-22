@@ -1,7 +1,6 @@
 import {html, useState} from "https://unpkg.com/htm/preact/standalone.mjs?module";
 
-export default function WordScroller({words=[]}={}) {
-  debugger;
+export default function WordScroller({words=[], prevWord=""}={}) {
   const wordsElems = words.map((word, i) => {
     const classes = ["scroller-word"];
     if (i === 0)
@@ -14,8 +13,15 @@ export default function WordScroller({words=[]}={}) {
     `
   });
 
+  const prevWordEl = prevWord && html`
+    <div class="scroller-word scroller-word-prev">
+      ${prevWord}
+    </div>
+  `;
+
   return html`
     <div class="scroller-words">
+      ${prevWordEl}
       ${wordsElems}
     </div>
   `;

@@ -16,9 +16,11 @@ export default function TypingTester() {
   });
 
   const [currentWords, setCurrentWords] = useState(["hello", "world", "this", "is", "a", "test"]);
+  const [prevWord, setPrevWord] = useState("");
 
   const handleWord = (word) => {
     setCurrentWords(currentWords.slice(1));
+    setPrevWord(word);
   };
 
   const controls = html`
@@ -56,6 +58,7 @@ export default function TypingTester() {
     <div class="words-area">
       <${WordScroller}
         words=${currentWords}
+        prevWord=${prevWord}
       />
     </div>
     <${TextInput}
