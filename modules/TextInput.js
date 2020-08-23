@@ -10,13 +10,14 @@ export default ({onWord, targetWord}={}) => {
   const inputRef = useRef();
 
   const handleInput = (event) => {
+    const text = event.target.value;
+
     if (showPlaceholder)
       setShowPlaceholder(false);
 
     setPartiallyWrong(
-      targetWord && !almostStartsWith(targetWord, inputRef.current.value));
+      targetWord && !almostStartsWith(targetWord, text));
 
-    const text = event.target.value;
     if (endingSpace.test(text)) {
       if (typeof onWord === "function") {
         const word = event.target.value.replace(endingSpace, "");

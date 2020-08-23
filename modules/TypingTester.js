@@ -2,6 +2,7 @@ import {render, html, useState, useEffect} from "https://unpkg.com/htm/preact/st
 import TextInput from "./TextInput.js";
 import WordScroller from "./WordScroller.js";
 import useWordGetter from "./useWordGetter.js";
+import {stripSpace} from "./text.js";
 
 export default function TypingTester() {
   const [enableSpeech, setEnableSpeech] = useState(false);
@@ -20,7 +21,7 @@ export default function TypingTester() {
   const [prevWord, setPrevWord] = useState("");
 
   const handleWord = (word) => {
-    const nextWord = wordGetter();
+    const nextWord = stripSpace(wordGetter());
 
     // speech
     speechSynthesis.cancel();

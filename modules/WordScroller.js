@@ -1,10 +1,12 @@
 import {html, useState, useRef, useLayoutEffect} from "https://unpkg.com/htm/preact/standalone.mjs?module";
+import {unicodeEquals} from "./text.js";
 
-export default function WordScroller({words=[], prevWord=""}={}) {
+export default function WordScroller({words=[], prevWord="", expectedPrevWord=""}={}) {
   const [scrollDistance, setScrollDistance] = useState(0);
   const firstWordRef = useRef();
   const scrollerRef = useRef();
 
+  // upcoming words
   const wordsElems = words.map((word, i) => {
     const classes = ["scroller-word"];
     if (i === 0)
@@ -20,8 +22,13 @@ export default function WordScroller({words=[], prevWord=""}={}) {
     `
   });
 
+  // previous (typed) word
+  const prevWordClasses = ["scroller-word", "scroller-word-prev"];
+  if (!unicodeEquals(prevWord, expectedPrevWord))
+    prevWordClasses.push("scroller-word-bad");
+
   const prevWordEl = prevWord && html`
-    <div class="scroller-word scroller-word-prev">
+    <div class=${prevWordClasses.join(" ")}>
       ${prevWord}
     </div>
   `;
