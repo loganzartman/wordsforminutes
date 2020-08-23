@@ -101,19 +101,21 @@ button:active {
 
 .scroller-words {
 	display: flex;
-  position: relative
+  position: relative;
 	flex-direction: row;
-}
-
-.scroller-word-prev {
-  position: absolute;
-  transform: translateX(-100%);
+  transition: transform 0.2s linear;
+  transform: translateX(0);
 }
 
 .scroller-word {
 	font-size: 1.5em;
 	padding: 0.2em 0.5em;
 	color: var(--col-fg);
+}
+
+.scroller-word-prev {
+  position: absolute;
+  transform: translateX(-100%);
 }
 
 .scroller-word-bad {
