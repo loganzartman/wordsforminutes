@@ -3,8 +3,8 @@ import {ChainBuilder, TextGenerator} from "./markov.js";
 import {normalizeCorpus} from "./text.js";
 import corpus from "./corpus/tao.js";
 
-// really bad splitting into characters
-const sourceWords = normalizeCorpus(corpus).split("");
+// best attempt splitting into characters
+const sourceWords = Array.from(normalizeCorpus(corpus));
 
 export default function useWordGetter({coherence=8, length=100, punctuation=true, caps=true}={}) {
   const generator = useMemo(() => {
