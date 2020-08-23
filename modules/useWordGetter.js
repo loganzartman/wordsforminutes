@@ -1,12 +1,12 @@
 import {useState, useMemo, useEffect, useCallback} from "https://unpkg.com/htm/preact/standalone.mjs?module";
 import {ChainBuilder, TextGenerator} from "./markov.js";
-import {normalizeCorpus} from "./text.js";
+import {normalizeCorpus, stripSpace} from "./text.js";
 import corpus from "./corpus/tao.js";
 
 // best attempt splitting into characters
 const sourceWords = Array.from(normalizeCorpus(corpus));
 
-export default function useWordGetter({coherence=8, length=100, punctuation=true, caps=true}={}) {
+export default function useWordGetter({coherence=8, length=100, punctuation=true, caps=true, stripSpaces=true}={}) {
   const generator = useMemo(() => {
     // really dumb markov chain building
     const builder = new ChainBuilder(coherence);
@@ -22,8 +22,10 @@ export default function useWordGetter({coherence=8, length=100, punctuation=true
   			w = w.replace(/\p{P}/ug, "");
   		if (!caps)
   			w = w.toLocaleLowerCase();
+      if (stripSpaces)
+        w = stripSpace(w);
   		return w;
   	},
-  	[generator, punctuation, caps]
+  	[generator, punctuation, caps, stripSpaces]
  	);
 }

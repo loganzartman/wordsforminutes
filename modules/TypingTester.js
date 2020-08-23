@@ -2,11 +2,10 @@ import {render, html, useState, useEffect} from "https://unpkg.com/htm/preact/st
 import TextInput from "./TextInput.js";
 import WordScroller from "./WordScroller.js";
 import useWordGetter from "./useWordGetter.js";
-import {stripSpace} from "./text.js";
 
 export default function TypingTester() {
   const [enableSpeech, setEnableSpeech] = useState(false);
-  const [coherence, setCoherence] = useState(8);
+  const [coherence, setCoherence] = useState(11);
   const [punctuation, setPunctuation] = useState(true);
   const [caps, setCaps] = useState(true);
 
@@ -18,10 +17,11 @@ export default function TypingTester() {
   });
 
   const [currentWords, setCurrentWords] = useState([]);
-  const [prevWord, setPrevWord] = useState("");
+  const [typedWord, setTypedWord] = useState("");
+  const [expectedWord, setExpectedWord] = useState("");
 
   const handleWord = (word) => {
-    const nextWord = stripSpace(wordGetter());
+    const nextWord = wordGetter();
 
     // speech
     speechSynthesis.cancel();
@@ -31,11 +31,14 @@ export default function TypingTester() {
       speechSynthesis.speak(utterance);
     }
 
+    // update current words
     setCurrentWords([
       ...currentWords.slice(1),
       nextWord
     ]);
-    setPrevWord(word);
+
+    setExpectedWord(currentWords[0]);
+    setTypedWord(word);
   };
 
   useEffect(() => {
@@ -86,7 +89,8 @@ export default function TypingTester() {
     <div class="words-area">
       <${WordScroller}
         words=${currentWords}
-        prevWord=${prevWord}
+        prevWord=${typedWord}
+        expectedPrevWord=${expectedWord}
       />
     </div>
     <${TextInput}
