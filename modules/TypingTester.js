@@ -4,6 +4,7 @@ import WordScroller from "./WordScroller.js";
 import useWordGetter from "./useWordGetter.js";
 
 export default function TypingTester() {
+  const [enableSpeech, setEnableSpeech] = useState(false);
   const [coherence, setCoherence] = useState(8);
   const [punctuation, setPunctuation] = useState(true);
   const [caps, setCaps] = useState(true);
@@ -19,9 +20,19 @@ export default function TypingTester() {
   const [prevWord, setPrevWord] = useState("");
 
   const handleWord = (word) => {
+    const nextWord = wordGetter();
+
+    // speech
+    speechSynthesis.cancel();
+    if (enableSpeech){
+      const utterance = new SpeechSynthesisUtterance(currentWords[1]);
+      utterance.rate = 2;
+      speechSynthesis.speak(utterance);
+    }
+
     setCurrentWords([
       ...currentWords.slice(1),
-      wordGetter()
+      nextWord
     ]);
     setPrevWord(word);
   };
@@ -48,6 +59,14 @@ export default function TypingTester() {
         onChange=${(e) => setCaps(e.target.checked)}
       />
       caps
+    </label>
+    <label>
+      <input
+        type="checkbox"
+        checked=${enableSpeech}
+        onChange=${(e) => setEnableSpeech(e.target.checked)}
+      />
+      speak
     </label>
   `;
 
