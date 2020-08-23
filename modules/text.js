@@ -3,6 +3,8 @@ export const normalizeCorpus = (str) => {
     .normalize()
     .replace(/[\r\n]+/ug, " ") // newlines to spaces
     .replace(/(\p{Zs})+/ug, "$1") // condense extra word separators
+    .replace(/[“”]/g,'"') // replace fancy quotes
+    .replace(/[‘’]/g,"'") // replace fancy quotes
 };
 
 export const stripSpace = (str) => str.replace(/\p{WSpace}/ug, "");
