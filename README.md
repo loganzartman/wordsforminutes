@@ -1,4 +1,4 @@
-# unboundkeys
+# words for minutes
 
 _statistic-driven typing practice_
 
