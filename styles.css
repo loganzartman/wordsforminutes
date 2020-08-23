@@ -85,18 +85,23 @@ button:active {
 
 	padding: 0.2em 0.4em;
 
-	color: var(--col-good);
-	box-shadow: 0px 0px 0px 5px var(--col-good), 0px 0px 0px 0px var(--col-a1);
+  --color: var(--col-good);
+	color: var(--color);
+	box-shadow: 0px 0px 0px 5px var(--color), 0px 0px 0px 0px var(--col-a1);
 
 	transition: box-shadow 0.1s ease-out;
 }
 
 .text-input:hover {
-	box-shadow: 0px 0px 0px 7px var(--col-good), 0px 0px 0px 0px var(--col-a1);
+	box-shadow: 0px 0px 0px 7px var(--color), 0px 0px 0px 0px var(--col-a1);
 }
 
 .text-input:focus {
-	box-shadow: 0px 3px 0px 7px var(--col-good), 0px 12px 0px 7px var(--col-a1);
+	box-shadow: 0px 3px 0px 7px var(--color), 0px 12px 0px 7px var(--col-a1);
+}
+
+.text-input-bad {
+  --color: var(--col-bad);
 }
 
 .scroller-words {

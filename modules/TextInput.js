@@ -1,15 +1,20 @@
 import {html, useState, useRef, useEffect} from "https://unpkg.com/htm/preact/standalone.mjs?module";
+import {almostStartsWith} from "./text.js";
 
 const endingSpace = /\p{Zs}$/u;
 
-export default ({onWord}={}) => {
+export default ({onWord, targetWord}={}) => {
   const placeholder = "type here to start";
   const [showPlaceholder, setShowPlaceholder] = useState(true);
+  const [partiallyWrong, setPartiallyWrong] = useState(false);
   const inputRef = useRef();
 
   const handleInput = (event) => {
     if (showPlaceholder)
       setShowPlaceholder(false);
+
+    setPartiallyWrong(
+      targetWord && !almostStartsWith(targetWord, inputRef.current.value));
 
     const text = event.target.value;
     if (endingSpace.test(text)) {
@@ -18,16 +23,19 @@ export default ({onWord}={}) => {
         onWord(word);
       }
       event.target.value = "";
+      setPartiallyWrong(false);
     }
   };
 
   useEffect(() => setTimeout(() => inputRef.current.focus(), 100), [inputRef]);
 
+  const wrongClass = partiallyWrong ? "text-input-bad" : "";
+
   return html`
     <div class="text-input-container">
       <input type="text"
         ref=${inputRef}
-        class="text-input"
+        class="text-input ${wrongClass}"
         placeholder=${showPlaceholder ? placeholder : ""}
         onInput=${handleInput}
         onBlur=${() => setShowPlaceholder(true)}

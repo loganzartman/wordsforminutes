@@ -89,6 +89,7 @@ export default function TypingTester() {
       />
     </div>
     <${TextInput}
+      targetWord=${currentWords[0]}
       onWord=${(word) => handleWord(word)}
     />
   `;
