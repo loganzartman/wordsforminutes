@@ -47,7 +47,7 @@ button:active {
 .main-content {
 	max-width: 900px;
 	margin: auto;
-	margin-top: 3em;
+	margin-top: 6em;
 }
 
 .title {
@@ -77,7 +77,7 @@ button:active {
 
 	font-family: "Inconsolata", monospace;
 	font-weight: 400;
-	font-size: 2rem;
+	font-size: 2em;
 
 	outline: none;
 	border: none;
@@ -108,9 +108,15 @@ button:active {
 }
 
 .scroller-word {
-	font-size: 1.5em;
-	padding: 0.2em 0.5em;
-	color: var(--col-fg);
+  box-sizing: border-box;
+  border: 0.2em solid rgba(0,0,0,0);
+  padding: 0.15em 0.2em;
+
+  font-family: "Inconsolata", monospace;
+  font-size: 2em;
+
+  color: var(--col-fg);
+  opacity: 0.8;
 }
 
 .scroller-word-prev {
@@ -123,10 +129,11 @@ button:active {
 }
 
 .scroller-word-active {
-	color: var(--col-bg);
-	background: var(--col-fg);
+  opacity: 1.0;
+	border-bottom-color: var(--col-fg);
 }
 
 .scroller-word-active-bad {
-	background: var(--col-bad);
+  color: var(--col-bad);
+  border-bottom-color: var(--col-bad);
 }
