@@ -1,24 +1,22 @@
 import {render, html, useState, useEffect} from "https://unpkg.com/htm/preact/standalone.mjs?module";
+import TestSettings from "./TestSettings.js";
 import TextInput from "./TextInput.js";
 import WordScroller from "./WordScroller.js";
 import useWordGetter from "./useWordGetter.js";
 
 export default function TypingTester() {
-  const [enableSpeech, setEnableSpeech] = useState(false);
-  const [coherence, setCoherence] = useState(11);
-  const [punctuation, setPunctuation] = useState(true);
-  const [caps, setCaps] = useState(true);
+  const [settings, setSettings] = useState({});
+  const [currentWords, setCurrentWords] = useState([]);
+  const [typedWord, setTypedWord] = useState("");
+  const [expectedWord, setExpectedWord] = useState("");
 
+  const {coherence, punctuation, caps, enableSpeech} = settings;
   const wordGetter = useWordGetter({
     coherence,
     punctuation,
     caps,
     length: 500
   });
-
-  const [currentWords, setCurrentWords] = useState([]);
-  const [typedWord, setTypedWord] = useState("");
-  const [expectedWord, setExpectedWord] = useState("");
 
   const handleWord = (word) => {
     const nextWord = wordGetter();
@@ -46,34 +44,6 @@ export default function TypingTester() {
       Array.from({length: 8}, _ => wordGetter()));
   }, [wordGetter]);
 
-  const controls = html`
-    <button class="reset-button">reset</button>
-    <label>
-      <input
-        type="checkbox"
-        checked=${punctuation}
-        onChange=${(e) => setPunctuation(e.target.checked)}
-      />
-      punctuation
-    </label>
-    <label>
-      <input
-        type="checkbox"
-        checked=${caps}
-        onChange=${(e) => setCaps(e.target.checked)}
-      />
-      caps
-    </label>
-    <label>
-      <input
-        type="checkbox"
-        checked=${enableSpeech}
-        onChange=${(e) => setEnableSpeech(e.target.checked)}
-      />
-      speak
-    </label>
-  `;
-
   return html`
     <div style=${{display: "flex", flexDirection: "row"}}>
       <input name="coherence" 
@@ -85,7 +55,9 @@ export default function TypingTester() {
       />
       <label for="coherence">coherence: ${coherence}</label>
     </div>
-    ${controls}
+    <${TestSettings}
+      onChange=${(s) => setSettings(s)}
+    />
     <div class="words-area">
       <${WordScroller}
         words=${currentWords}
