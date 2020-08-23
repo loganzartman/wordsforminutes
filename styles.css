@@ -108,7 +108,7 @@ button:active {
 	display: flex;
   position: relative;
 	flex-direction: row;
-  transition: transform 0.2s linear;
+  transition: transform 0.2s cubic-bezier(0.2, -0.01, 0, 1);
   transform: translateX(0);
 }
 
