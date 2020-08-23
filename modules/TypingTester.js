@@ -3,8 +3,11 @@ import TestSettings from "./TestSettings.js";
 import TextInput from "./TextInput.js";
 import WordScroller from "./WordScroller.js";
 import useWordGetter from "./useWordGetter.js";
+import {unicodeEquals} from "./text.js";
+import {computeWpm} from "./stats.js";
 
 export default function TypingTester() {
+  const [history, setHistory] = useState([{event: "start", timestamp: Date.now()}]);
   const [settings, setSettings] = useState({});
   const [currentWords, setCurrentWords] = useState([]);
   const [typedWord, setTypedWord] = useState("");
@@ -17,6 +20,11 @@ export default function TypingTester() {
     caps,
     length: 500
   });
+
+  useEffect(() => {
+    setCurrentWords(
+      Array.from({length: 8}, _ => wordGetter()));
+  }, [wordGetter]);
 
   const handleWord = (word) => {
     const nextWord = wordGetter();
@@ -37,12 +45,26 @@ export default function TypingTester() {
 
     setExpectedWord(currentWords[0]);
     setTypedWord(word);
+    setHistory((history) => {
+      const expected = currentWords[0];
+      const typed = word;
+
+      return [...history, {
+        event: "word typed",
+        expected,
+        typed,
+        correct: unicodeEquals(expected, typed),
+        timestamp: Date.now()
+      }];
+    });
   };
 
-  useEffect(() => {
-    setCurrentWords(
-      Array.from({length: 8}, _ => wordGetter()));
-  }, [wordGetter]);
+  const handleInputBlur = () => {
+    setHistory((history) => 
+      [...history, {event: "stop", timestamp: Date.now()}]);
+  };
+
+  const wpm = computeWpm(history);
 
   return html`
     <div style=${{display: "flex", flexDirection: "row"}}>
@@ -68,6 +90,10 @@ export default function TypingTester() {
     <${TextInput}
       targetWord=${currentWords[0]}
       onWord=${(word) => handleWord(word)}
+      onBlur=${handleInputBlur}
     />
+    <div class="stats-container">
+      <div class="stats-item">WPM: ${wpm.toFixed(0)}</div>
+    </div>
   `;
 }

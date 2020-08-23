@@ -3,7 +3,7 @@ import {almostStartsWith} from "./text.js";
 
 const endingSpace = /\p{Zs}$/u;
 
-export default ({onWord, targetWord}={}) => {
+export default ({onWord, onBlur, targetWord}={}) => {
   const placeholder = "type here to start";
   const [showPlaceholder, setShowPlaceholder] = useState(true);
   const [partiallyWrong, setPartiallyWrong] = useState(false);
@@ -28,6 +28,18 @@ export default ({onWord, targetWord}={}) => {
     }
   };
 
+  const handleBlur = (event) => {
+    setShowPlaceholder(true);
+    if (onBlur)
+      onBlur();
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Escape") {
+      inputRef.current.blur();
+    }
+  };
+
   useEffect(() => setTimeout(() => inputRef.current.focus(), 100), [inputRef]);
 
   const wrongClass = partiallyWrong ? "text-input-bad" : "";
@@ -39,7 +51,8 @@ export default ({onWord, targetWord}={}) => {
         class="text-input ${wrongClass}"
         placeholder=${showPlaceholder ? placeholder : ""}
         onInput=${handleInput}
-        onBlur=${() => setShowPlaceholder(true)}
+        onBlur=${handleBlur}
+        onKeyDown=${handleKeyDown}
       />
     </div>
   `;
