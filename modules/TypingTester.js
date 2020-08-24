@@ -26,6 +26,16 @@ export default function TypingTester() {
     length: 500
   });
 
+  const resetWords = () => 
+    setCurrentWords(Array.from({length: 16}, _ => wordGetter()));
+
+  const doReset = () => {
+    setHistory([]);
+    resetWords();
+  };
+
+  useEffect(() => doReset(), [wordGetter]);
+
   useEffect(() => {
     if (isRecording) {
       setHistory([...history, {event: "start", timestamp: Date.now()}]);
@@ -33,11 +43,6 @@ export default function TypingTester() {
       setHistory([...history, {event: "stop", timestamp: Date.now()}]);
     }
   }, [isRecording]);
-
-  useEffect(() => {
-    setCurrentWords(
-      Array.from({length: 16}, _ => wordGetter()));
-  }, [wordGetter]);
 
   const resetPauseTimeout = () => {
     if (pauseTimeout.current !== null) {
@@ -106,6 +111,12 @@ export default function TypingTester() {
       />
       <label for="coherence">coherence: ${coherence}</label>
     </div>
+    <button 
+      class="reset-button"
+      onClick=${() => doReset()}
+    >
+      reset
+    </button>
     <${TestSettings}
       onChange=${(s) => setSettings(s)}
     />

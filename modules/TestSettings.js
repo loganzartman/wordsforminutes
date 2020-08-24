@@ -18,7 +18,6 @@ export default function TestSettings({onChange}={}) {
   }, [enableSpeech, coherence, punctuation, caps]);
 
   return html`
-    <button class="reset-button">reset</button>
     <label>
       <input
         type="checkbox"
