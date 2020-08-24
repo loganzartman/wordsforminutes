@@ -92,7 +92,7 @@ export default function TypingTester() {
   const wpm = computeWpm(history);
   const numCorrect = computeCorrect(history);
   const numWrong = computeWrong(history);
-  const acc = numCorrect / (numCorrect + numWrong);
+  const acc = numCorrect / Math.max(1, numCorrect + numWrong);
   const meanLen = meanWordLength(history);
 
   return html`
