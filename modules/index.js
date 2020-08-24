@@ -3,10 +3,10 @@ import TypingTester from "./TypingTester.js";
 
 const App = (props) => {
   return html`
-    <div class="main-content">
+    <main class="main-content">
       <h1 class="title">words for minutes</h1>
       <${TypingTester} />
-    </div>
+    </main>
   `;
 };
 

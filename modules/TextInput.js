@@ -50,6 +50,7 @@ export default ({onWord, onBlur, onInput, targetWord}={}) => {
   return html`
     <div class="text-input-container">
       <input type="text"
+        id="text-input"
         ref=${inputRef}
         class="text-input ${wrongClass}"
         spellcheck="false"
@@ -58,6 +59,9 @@ export default ({onWord, onBlur, onInput, targetWord}={}) => {
         onBlur=${handleBlur}
         onKeyDown=${handleKeyDown}
       />
+      <label for="text-input" style="display: none">
+        typing test text input
+      </label>
     </div>
   `;
 };

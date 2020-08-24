@@ -123,15 +123,15 @@ export default function TypingTester() {
       onInput=${() => resetPauseTimeout()}
     />
     <div class="stats-container">
-      <div class="stats-item">
+      <div class="stats-item" title=${"statistics " + (isRecording ? "recording" : "paused")}>
         <i class="material-icons">
           ${isRecording ? "play_arrow" : "pause"}
         </i>
       </div>
-      <div class="stats-item">wpm: ${wpm.toFixed(0)}</div>
-      <div class="stats-item">acc: ${(acc * 100).toFixed(0)}%</div>
-      <div class="stats-item">words: ${numCorrect + numWrong}</div>
-      <div class="stats-item">mean length: ${Math.round(meanLen)}</div>
+      <div class="stats-item" title="words per minute">wpm: ${wpm.toFixed(0)}</div>
+      <div class="stats-item" title="accuracy">acc: ${(acc * 100).toFixed(0)}%</div>
+      <div class="stats-item" title="total words">words: ${numCorrect + numWrong}</div>
+      <div class="stats-item" title="average word length">mean length: ${Math.round(meanLen)}</div>
     </div>
   `;
 }
