@@ -2,9 +2,9 @@ import {render, html, useState, useEffect} from "https://unpkg.com/htm/preact/st
 
 export default function TestSettings({onChange}={}) {
   const [enableSpeech, setEnableSpeech] = useState(false);
-  const [coherence, setCoherence] = useState(11);
-  const [punctuation, setPunctuation] = useState(true);
-  const [caps, setCaps] = useState(true);
+  const [coherence, setCoherence] = useState(9);
+  const [punctuation, setPunctuation] = useState(false);
+  const [caps, setCaps] = useState(false);
 
   useEffect(() => {
     if (onChange) {

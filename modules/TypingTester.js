@@ -4,7 +4,7 @@ import TextInput from "./TextInput.js";
 import WordScroller from "./WordScroller.js";
 import useWordGetter from "./useWordGetter.js";
 import {unicodeEquals} from "./text.js";
-import {computeWpm} from "./stats.js";
+import {computeWpm, computeCorrect, computeWrong, meanWordLength} from "./stats.js";
 
 const PAUSE_TIMEOUT = 1000;
 
@@ -90,6 +90,10 @@ export default function TypingTester() {
   };
 
   const wpm = computeWpm(history);
+  const numCorrect = computeCorrect(history);
+  const numWrong = computeWrong(history);
+  const acc = numCorrect / (numCorrect + numWrong);
+  const meanLen = meanWordLength(history);
 
   return html`
     <div style=${{display: "flex", flexDirection: "row"}}>
@@ -124,7 +128,10 @@ export default function TypingTester() {
           ${isRecording ? "play_arrow" : "pause"}
         </i>
       </div>
-      <div class="stats-item">WPM: ${wpm.toFixed(0)}</div>
+      <div class="stats-item">wpm: ${wpm.toFixed(0)}</div>
+      <div class="stats-item">acc: ${(acc * 100).toFixed(0)}%</div>
+      <div class="stats-item">words: ${numCorrect + numWrong}</div>
+      <div class="stats-item">mean length: ${Math.round(meanLen)}</div>
     </div>
   `;
 }

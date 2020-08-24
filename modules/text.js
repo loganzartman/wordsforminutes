@@ -14,7 +14,7 @@ export const unicodeSlice = (str, start, end) =>
 
 export const unicodeEquals = (a, b) => a.normalize() === b.normalize();
 
-export const unicodeStrLength = (str) => Array.from(str).length;
+export const unicodeLength = (str) => Array.from(str).length;
 
 /**
  * Checks whether the given string "almost starts with" the given prefix;
@@ -25,7 +25,7 @@ export const unicodeStrLength = (str) => Array.from(str).length;
 export const almostStartsWith = (str, prefix) => {
   str = str.normalize();
   prefix = prefix.normalize();
-  if (unicodeStrLength(prefix) > unicodeStrLength(str))
+  if (unicodeLength(prefix) > unicodeLength(str))
     return false;
 
   return str.startsWith(unicodeSlice(prefix, 0, -1));

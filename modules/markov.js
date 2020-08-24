@@ -120,7 +120,6 @@ export class TextGenerator {
       return;
     }
     
-    console.log("hit");
     const choice = Math.random();
     let cumulativeProb = 0;
     for (let [b, prob] of transitions) {
