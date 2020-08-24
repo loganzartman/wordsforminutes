@@ -3,7 +3,7 @@ import {almostStartsWith} from "./text.js";
 
 const endingSpace = /\p{Zs}$/u;
 
-export default ({onWord, onBlur, targetWord}={}) => {
+export default ({onWord, onBlur, onInput, targetWord}={}) => {
   const placeholder = "type here to start";
   const [showPlaceholder, setShowPlaceholder] = useState(true);
   const [partiallyWrong, setPartiallyWrong] = useState(false);
@@ -26,6 +26,9 @@ export default ({onWord, onBlur, targetWord}={}) => {
       event.target.value = "";
       setPartiallyWrong(false);
     }
+
+    if (onInput)
+      onInput(event);
   };
 
   const handleBlur = (event) => {

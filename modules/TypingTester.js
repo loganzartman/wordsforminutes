@@ -6,11 +6,13 @@ import useWordGetter from "./useWordGetter.js";
 import {unicodeEquals} from "./text.js";
 import {computeWpm} from "./stats.js";
 
+const PAUSE_TIMEOUT = 1000;
+
 export default function TypingTester() {
   const [isRecording, setIsRecording] = useState(false);
-  const recordingTimeout = useRef(null);
+  const pauseTimeout = useRef(null);
 
-  const [history, setHistory] = useState([{event: "start", timestamp: Date.now()}]);
+  const [history, setHistory] = useState([]);
   const [settings, setSettings] = useState({});
   const [currentWords, setCurrentWords] = useState([]);
   const [typedWord, setTypedWord] = useState("");
@@ -25,9 +27,28 @@ export default function TypingTester() {
   });
 
   useEffect(() => {
+    if (isRecording) {
+      setHistory([...history, {event: "start", timestamp: Date.now()}]);
+    } else {
+      setHistory([...history, {event: "stop", timestamp: Date.now()}]);
+    }
+  }, [isRecording]);
+
+  useEffect(() => {
     setCurrentWords(
       Array.from({length: 16}, _ => wordGetter()));
   }, [wordGetter]);
+
+  const resetPauseTimeout = () => {
+    if (pauseTimeout.current !== null) {
+      clearTimeout(pauseTimeout.current);
+    }
+    pauseTimeout.current = setTimeout(() => {
+      setIsRecording(false);
+    }, PAUSE_TIMEOUT);
+  }
+
+  useEffect(() => resetPauseTimeout(), []);
 
   const handleWord = (word) => {
     const nextWord = wordGetter();
@@ -39,6 +60,8 @@ export default function TypingTester() {
       utterance.rate = 2;
       speechSynthesis.speak(utterance);
     }
+
+    setIsRecording(true);
 
     // update current words
     setCurrentWords([
@@ -63,8 +86,7 @@ export default function TypingTester() {
   };
 
   const handleInputBlur = () => {
-    setHistory((history) => 
-      [...history, {event: "stop", timestamp: Date.now()}]);
+    setIsRecording(false);
   };
 
   const wpm = computeWpm(history);
@@ -92,8 +114,9 @@ export default function TypingTester() {
     </div>
     <${TextInput}
       targetWord=${currentWords[0]}
-      onWord=${(word) => handleWord(word)}
+      onWord=${handleWord}
       onBlur=${handleInputBlur}
+      onInput=${() => resetPauseTimeout()}
     />
     <div class="stats-container">
       <div class="stats-item">
