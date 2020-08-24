@@ -2,7 +2,7 @@ import {unicodeLength} from "./text.js";
 
 export const meanWordLength = (history) => {
   const wordEvents = history.filter(e => e.event === "word typed");
-  const total = wordEvents.reduce((n, e) => n + unicodeLength(e.typed), 0);
+  const total = wordEvents.reduce((n, e) => n + unicodeLength(e.expected), 0);
   if (wordEvents.length === 0)
     return 0;
   return total / wordEvents.length;
