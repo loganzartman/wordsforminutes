@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@500&family=Merriweather&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 :root {
 	--col-bg: #333333;
@@ -6,6 +7,7 @@
 	--col-good: #A9C6D9;
 	--col-bad: #F27979;
 	--col-fg: #F2F2F2;
+  --typing-margin: 8rem;
 }
 
 html, body {
@@ -21,7 +23,7 @@ button, label {
 }
 
 button {
-	padding: 0.5em 1em;
+	padding: 0.5rem 1rem;
 
 	font-family: "Inconsolata", monospace;
 	font-weight: 400;
@@ -47,11 +49,11 @@ button:active {
 .main-content {
 	max-width: 900px;
 	margin: auto;
-	margin-top: 6em;
+	margin-top: 6rem;
 }
 
 .title {
-	font-size: 2.5em;
+	font-size: 2.5rem;
 
 	color: var(--col-a1);
 
@@ -64,13 +66,15 @@ button:active {
 }
 
 .words-area {
-	margin: 2rem 0;
+	margin-top: 3rem;
+  margin-bottom: 0.3rem;
+  overflow: hidden;
 }
 
 .text-input-container {
 	display: flex;
 	flex-direction: row;
-  margin-bottom: 2em;
+  margin-bottom: 2rem;
 }
 
 .text-input {
@@ -78,27 +82,30 @@ button:active {
 
 	font-family: "Inconsolata", monospace;
 	font-weight: 400;
-	font-size: 2em;
+	font-size: 2rem;
 
 	outline: none;
 	border: none;
 	background: none;
 
-	padding: 0.2em 0.4em;
+  margin: 0 var(--typing-margin);
+  padding: 0.2rem 0.5rem;
 
   --color: var(--col-good);
 	color: var(--color);
-	box-shadow: 0px 0px 0px 5px var(--color), 0px 0px 0px 0px var(--col-a1);
+	box-shadow: 0 0 0 0 transparent;
 
-	transition: box-shadow 0.1s ease-out;
+	transition: all 0.1s ease-out;
 }
 
 .text-input:hover {
-	box-shadow: 0px 0px 0px 7px var(--color), 0px 0px 0px 0px var(--col-a1);
+  color: var(--col-a1);
+	box-shadow: 0 0 0 0.3rem var(--col-a1);
 }
 
 .text-input:focus {
-	box-shadow: 0px 3px 0px 7px var(--color), 0px 12px 0px 7px var(--col-a1);
+  color: var(--color);
+	box-shadow: 0 0 0 0.3rem var(--color);
 }
 
 .text-input-bad {
@@ -106,6 +113,8 @@ button:active {
 }
 
 .scroller-words {
+  padding-left: var(--typing-margin);
+  width: max-content;
 	display: flex;
   position: relative;
 	flex-direction: row;
@@ -115,11 +124,11 @@ button:active {
 
 .scroller-word {
   box-sizing: border-box;
-  border: 0.2em solid rgba(0,0,0,0);
-  padding: 0.15em 0.2em;
+  border: 0.3rem solid rgba(0,0,0,0);
+  padding: 0.2rem 0.2rem;
 
   font-family: "Inconsolata", monospace;
-  font-size: 2em;
+  font-size: 2rem;
 
   color: var(--col-fg);
   opacity: 0.8;
@@ -150,11 +159,17 @@ button:active {
 }
 
 .stats-item {
-  padding: 0.2em 0.5em;
-  
-  font-family: "Merriweather", serif;
-  font-size: 1.5em;
+  padding: 0.1rem 0.5rem;
+  margin-right: 1rem;
 
-  color: var(--col-fg);
-  opacity: 0.66;
+  font-family: "Merriweather", serif;
+  font-size: 1.5rem;
+  
+  color: var(--col-a1);
+  border: 0.2rem solid transparent;
+  border-bottom-color: var(--col-a1);
+}
+
+.stats-item>i {
+  font-size: 1.5rem;
 }

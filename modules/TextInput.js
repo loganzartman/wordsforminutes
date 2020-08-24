@@ -49,6 +49,7 @@ export default ({onWord, onBlur, targetWord}={}) => {
       <input type="text"
         ref=${inputRef}
         class="text-input ${wrongClass}"
+        spellcheck="false"
         placeholder=${showPlaceholder ? placeholder : ""}
         onInput=${handleInput}
         onBlur=${handleBlur}

@@ -1,4 +1,4 @@
-import {render, html, useState, useEffect} from "https://unpkg.com/htm/preact/standalone.mjs?module";
+import {render, html, useState, useEffect, useRef} from "https://unpkg.com/htm/preact/standalone.mjs?module";
 import TestSettings from "./TestSettings.js";
 import TextInput from "./TextInput.js";
 import WordScroller from "./WordScroller.js";
@@ -7,6 +7,9 @@ import {unicodeEquals} from "./text.js";
 import {computeWpm} from "./stats.js";
 
 export default function TypingTester() {
+  const [isRecording, setIsRecording] = useState(false);
+  const recordingTimeout = useRef(null);
+
   const [history, setHistory] = useState([{event: "start", timestamp: Date.now()}]);
   const [settings, setSettings] = useState({});
   const [currentWords, setCurrentWords] = useState([]);
@@ -23,7 +26,7 @@ export default function TypingTester() {
 
   useEffect(() => {
     setCurrentWords(
-      Array.from({length: 8}, _ => wordGetter()));
+      Array.from({length: 16}, _ => wordGetter()));
   }, [wordGetter]);
 
   const handleWord = (word) => {
@@ -93,6 +96,11 @@ export default function TypingTester() {
       onBlur=${handleInputBlur}
     />
     <div class="stats-container">
+      <div class="stats-item">
+        <i class="material-icons">
+          ${isRecording ? "play_arrow" : "pause"}
+        </i>
+      </div>
       <div class="stats-item">WPM: ${wpm.toFixed(0)}</div>
     </div>
   `;
