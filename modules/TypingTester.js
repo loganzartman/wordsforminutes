@@ -1,4 +1,4 @@
-import {render, html, useState, useEffect, useRef} from "https://unpkg.com/htm/preact/standalone.mjs?module";
+import {html, useState, useEffect, useRef, useMemo} from "https://unpkg.com/htm/preact/standalone.mjs?module";
 import TestSettings from "./TestSettings.js";
 import TextInput from "./TextInput.js";
 import WordScroller from "./WordScroller.js";
@@ -94,11 +94,11 @@ export default function TypingTester() {
     setIsRecording(false);
   };
 
-  const wpm = computeWpm(history);
-  const numCorrect = computeCorrect(history);
-  const numWrong = computeWrong(history);
+  const wpm = useMemo(() => computeWpm(history), [history]);
+  const numCorrect = useMemo(() => computeCorrect(history), [history]);
+  const numWrong = useMemo(() => computeWrong(history), [history]);
   const acc = numCorrect / Math.max(1, numCorrect + numWrong);
-  const meanLen = meanWordLength(history);
+  const meanLen = useMemo(() => meanWordLength(history), [history]);
 
   return html`
     <button 
