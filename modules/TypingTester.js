@@ -15,8 +15,7 @@ export default function TypingTester() {
   const [history, setHistory] = useState([]);
   const [settings, setSettings] = useState({});
   const [currentWords, setCurrentWords] = useState([]);
-  const [typedWord, setTypedWord] = useState("");
-  const [expectedWord, setExpectedWord] = useState("");
+  const [typedWords, setTypedWords] = useState([]);
 
   const {coherence, punctuation, caps, enableSpeech} = settings;
   const wordGetter = useWordGetter({
@@ -74,8 +73,11 @@ export default function TypingTester() {
       nextWord
     ]);
 
-    setExpectedWord(currentWords[0]);
-    setTypedWord(word);
+    setTypedWords((typedWords) => 
+      [...typedWords, {typed: word, expected: currentWords[0]}]
+        .slice(-4) // only keep last 4 items
+    );
+
     setHistory((history) => {
       const expected = currentWords[0];
       const typed = word;
@@ -113,8 +115,7 @@ export default function TypingTester() {
     <div class="words-area">
       <${WordScroller}
         words=${currentWords}
-        prevWord=${typedWord}
-        expectedPrevWord=${expectedWord}
+        typedWords=${typedWords}
       />
     </div>
     <${TextInput}

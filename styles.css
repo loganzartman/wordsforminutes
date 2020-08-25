@@ -122,6 +122,12 @@ button:active {
   transform: translateX(0);
 }
 
+.scroller-words-prev {
+	display: flex;
+  position: absolute;
+  transform: translateX(-100%);
+}
+
 .scroller-word {
   box-sizing: border-box;
   border: 0.3rem solid rgba(0,0,0,0);
@@ -132,11 +138,6 @@ button:active {
 
   color: var(--col-fg);
   opacity: 0.8;
-}
-
-.scroller-word-prev {
-  position: absolute;
-  transform: translateX(-100%);
 }
 
 .scroller-word-bad {

@@ -1,7 +1,7 @@
 import {html, useState, useRef, useLayoutEffect} from "https://unpkg.com/htm/preact/standalone.mjs?module";
 import {unicodeEquals} from "./text.js";
 
-export default function WordScroller({words=[], prevWord="", expectedPrevWord=""}={}) {
+export default function WordScroller({words=[], typedWords=[]}={}) {
   const [scrollDistance, setScrollDistance] = useState(0);
   const firstWordRef = useRef();
   const scrollerRef = useRef();
@@ -22,16 +22,17 @@ export default function WordScroller({words=[], prevWord="", expectedPrevWord=""
     `
   });
 
-  // previous (typed) word
-  const prevWordClasses = ["scroller-word", "scroller-word-prev"];
-  if (!unicodeEquals(prevWord, expectedPrevWord))
-    prevWordClasses.push("scroller-word-bad");
-
-  const prevWordEl = prevWord && html`
-    <div class=${prevWordClasses.join(" ")}>
-      ${prevWord}
-    </div>
-  `;
+  // previous (typed) words
+  const typedWordsElems = typedWords.map(({typed, expected}) => {
+    const classes = ["scroller-word"];
+    if (!unicodeEquals(typed, expected))
+      classes.push("scroller-word-bad");
+    return html`
+      <div class=${classes.join(" ")}>
+        ${typed}
+      </div>
+    `;
+  });
 
   // smooth scroll effect
   useLayoutEffect(() => {
@@ -46,7 +47,9 @@ export default function WordScroller({words=[], prevWord="", expectedPrevWord=""
 
   return html`
     <div ref=${scrollerRef} class="scroller-words">
-      ${prevWordEl}
+      <div class="scroller-words-prev">
+        ${typedWordsElems}
+      </div>
       ${wordsElems}
     </div>
   `;
