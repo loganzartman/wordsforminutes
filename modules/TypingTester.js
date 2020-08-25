@@ -25,8 +25,13 @@ export default function TypingTester() {
     length: 500
   });
 
-  const resetWords = () => 
+  const resetWords = () => {
+    setTypedWords(
+      Array.from({length: 6}, _ => wordGetter())
+        .map(x => ({typed: x, expected: x}))
+    );
     setCurrentWords(Array.from({length: 16}, _ => wordGetter()));
+  };
 
   const doReset = () => {
     setHistory([]);
@@ -75,7 +80,7 @@ export default function TypingTester() {
 
     setTypedWords((typedWords) => 
       [...typedWords, {typed: word, expected: currentWords[0]}]
-        .slice(-4) // only keep last 4 items
+        .slice(-6) // only keep last 6 items
     );
 
     setHistory((history) => {
