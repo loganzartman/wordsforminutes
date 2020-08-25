@@ -14,6 +14,7 @@ export default function WordScroller({words=[], typedWords=[]}={}) {
 
     return html`
       <div 
+        key=${word}
         ref=${i === 0 ? firstWordRef : undefined}
         class=${classes.join(" ")}
       >
@@ -28,7 +29,7 @@ export default function WordScroller({words=[], typedWords=[]}={}) {
     if (!unicodeEquals(typed, expected))
       classes.push("scroller-word-bad");
     return html`
-      <div class=${classes.join(" ")}>
+      <div key=${expected} class=${classes.join(" ")}>
         ${expected}
       </div>
     `;
