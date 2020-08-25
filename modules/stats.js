@@ -11,36 +11,39 @@ export const meanWordLength = (history) => {
 export const computeWpm = (history, {lengthAdjusted=true}={}) => {
   const meanLen = meanWordLength(history);
 
-  const data = history.reduce((acc, e) => {
-    if (e.event === "start") {
-      acc.timerRunning = true;
-      acc.timerStart = e.timestamp;
+  let timerRunning = false;
+  let timerStart = 0;
+  let words = 0;
+  let duration_ms = 0;
+  
+  for (let item of history) {
+    const {event} = item;
+    if (event === "start") {
+      timerRunning = true;
+      timerStart = item.timestamp;
     }
-    if (e.event === "stop") {
-      acc.timerRunning = false;
+    if (event === "stop") {
+      timerRunning = false;
     }
-    if (e.event === "word typed") {
-      if (acc.timerRunning) {
-        const dt = e.timestamp - acc.timerStart;
-        acc.duration += dt;
-        if (e.correct)
-          acc.words += lengthAdjusted ? unicodeLength(e.typed) / meanLen : 1;
+    if (event === "word typed") {
+      if (timerRunning) {
+        duration_ms += item.timestamp - timerStart;
+        if (item.correct) {
+          if (lengthAdjusted)
+            words += unicodeLength(item.typed) / meanLen;
+          else
+            words += 1;
+        }
       }
-      acc.timerStart = e.timestamp;
-      acc.timerRunning = true;
+      timerRunning = true;
+      timerStart = item.timestamp;
     }
-    return acc;
-  }, {
-    words: 0,
-    duration: 0,
-    timerRunning: false,
-    timerStart: 0,
-  });
+  }
 
-  if (data.words === 0)
+  if (words === 0)
     return 0;
 
-  return data.words / (data.duration / 1000 / 60);
+  return words / (duration_ms / 1000 / 60);
 };
 
 export const computeCorrect = (history) => history
