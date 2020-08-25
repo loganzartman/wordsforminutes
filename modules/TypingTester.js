@@ -101,16 +101,6 @@ export default function TypingTester() {
   const meanLen = meanWordLength(history);
 
   return html`
-    <div style=${{display: "flex", flexDirection: "row"}}>
-      <input name="coherence" 
-        style=${{flex: 1}}
-        type="range" 
-        min="1" max="20" step="1" 
-        value=${coherence}  
-        onchange=${(event) => setCoherence(Number.parseInt(event.target.value))}
-      />
-      <label for="coherence">coherence: ${coherence}</label>
-    </div>
     <button 
       class="reset-button"
       onClick=${() => doReset()}

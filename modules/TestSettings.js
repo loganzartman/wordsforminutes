@@ -2,7 +2,7 @@ import {render, html, useState, useEffect} from "https://unpkg.com/htm/preact/st
 
 export default function TestSettings({onChange}={}) {
   const [enableSpeech, setEnableSpeech] = useState(false);
-  const [coherence, setCoherence] = useState(9);
+  const [coherence, setCoherence] = useState(3);
   const [punctuation, setPunctuation] = useState(false);
   const [caps, setCaps] = useState(false);
 
@@ -18,6 +18,16 @@ export default function TestSettings({onChange}={}) {
   }, [enableSpeech, coherence, punctuation, caps]);
 
   return html`
+    <div style=${{display: "flex", flexDirection: "row"}}>
+      <input name="coherence" 
+        style=${{flex: 1}}
+        type="range" 
+        min="1" max="20" step="1" 
+        value=${coherence}  
+        onchange=${(event) => setCoherence(Number.parseInt(event.target.value))}
+      />
+      <label for="coherence">coherence: ${coherence}</label>
+    </div>
     <label>
       <input
         type="checkbox"
