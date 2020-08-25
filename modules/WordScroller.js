@@ -29,7 +29,7 @@ export default function WordScroller({words=[], typedWords=[]}={}) {
       classes.push("scroller-word-bad");
     return html`
       <div class=${classes.join(" ")}>
-        ${typed}
+        ${expected}
       </div>
     `;
   });

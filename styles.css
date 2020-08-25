@@ -7,7 +7,8 @@
 	--col-good: #A9C6D9;
 	--col-bad: #F27979;
 	--col-fg: #F2F2F2;
-  --typing-margin: 8rem;
+	--typing-margin: 10rem;
+	--typing-font-size: 1.75rem;
 }
 
 html, body {
@@ -82,7 +83,7 @@ button:active {
 
 	font-family: "Inconsolata", monospace;
 	font-weight: 400;
-	font-size: 2rem;
+	font-size: var(--typing-font-size);
 
 	outline: none;
 	border: none;
@@ -118,7 +119,7 @@ button:active {
 	display: flex;
   position: relative;
 	flex-direction: row;
-  transition: transform 0.2s cubic-bezier(0.2, -0.01, 0, 1);
+  transition: transform 0.2s cubic-bezier(0, 0, 0.2, 1);
   transform: translateX(0);
 }
 
@@ -134,7 +135,7 @@ button:active {
   padding: 0.2rem 0.2rem;
 
   font-family: "Inconsolata", monospace;
-  font-size: 2rem;
+  font-size: var(--typing-font-size);
 
   color: var(--col-fg);
   opacity: 0.8;
