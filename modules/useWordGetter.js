@@ -1,10 +1,13 @@
 import {useState, useMemo, useEffect, useCallback} from "https://unpkg.com/htm/preact/standalone.mjs?module";
 import {ChainBuilder, TextGenerator} from "./markov.js";
-import {normalizeCorpus, stripSpace} from "./text.js";
+import {normalizeCorpus, stripSpace, splitWords} from "./text.js";
 import corpus from "./corpus/tao.js";
 
 // best attempt splitting into characters
-const sourceWords = Array.from(normalizeCorpus(corpus));
+// const sourceWords = Array.from(normalizeCorpus(corpus));
+
+// best attempt at splitting into words
+const sourceWords = splitWords(normalizeCorpus(corpus)); 
 
 export default function useWordGetter({coherence=8, length=100, punctuation=true, caps=true, stripSpaces=true}={}) {
   const generator = useMemo(() => {

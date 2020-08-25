@@ -28,5 +28,18 @@ export const almostStartsWith = (str, prefix) => {
   if (unicodeLength(prefix) > unicodeLength(str))
     return false;
 
+  // assume that all ascii code points are input atomically;
+  // for all-ascii strings, include the last character in the comparison.
+  if (/^\p{ASCII}*$/u.test(prefix))
+    return str.startsWith(prefix);
+
+  // don't compare the last character  
   return str.startsWith(unicodeSlice(prefix, 0, -1));
 }
+
+/**
+ * Best effort split into words. Assumes that words are separated by non 
+ * letter characters, which is not strictly valid.
+ */
+export const splitWords = (str) => 
+  str.split(/(\p{L}+|[^\p{L}])/u).filter(x => x.length > 0);
