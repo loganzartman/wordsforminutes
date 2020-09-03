@@ -1,4 +1,4 @@
-import {html, useState, useRef, useLayoutEffect} from "https://unpkg.com/htm/preact/standalone.mjs?module";
+import {html, useState, useRef, useLayoutEffect} from "./preact.js";
 import {unicodeEquals} from "./text.js";
 
 export default function WordScroller({words=[], typedWords=[]}={}) {

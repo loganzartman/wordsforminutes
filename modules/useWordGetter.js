@@ -1,4 +1,4 @@
-import {useState, useMemo, useEffect, useCallback} from "https://unpkg.com/htm/preact/standalone.mjs?module";
+import {useState, useMemo, useEffect, useCallback} from "./preact.js";
 import {ChainBuilder, TextGenerator} from "./markov.js";
 import {normalizeCorpus, stripSpace, splitWords} from "./text.js";
 import corpus from "./corpus/tao.js";

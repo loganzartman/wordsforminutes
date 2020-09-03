@@ -1,4 +1,4 @@
-import {html, useState, useRef, useEffect} from "https://unpkg.com/htm/preact/standalone.mjs?module";
+import {html, useState, useRef, useEffect} from "./preact.js";
 import {almostStartsWith} from "./text.js";
 
 const endingSpace = /\p{Zs}$/u;

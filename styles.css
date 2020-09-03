@@ -175,3 +175,36 @@ button:active {
 .stats-item>i {
   font-size: 1.5rem;
 }
+
+.barchart-bar {
+	fill: var(--col-a1);
+	fill-opacity: 0.5;
+	stroke: var(--col-a1);
+	stroke-opacity: 0.8;
+	stroke-width: 0.002px;
+
+	transition: all 0.2s ease-out;
+}
+.barchart-bar:hover {
+	fill-opacity: 0.8;
+	stroke-opacity: 1.0;
+	transition: none;
+}
+
+.barchart-label {
+	fill: var(--col-fg);
+	font-family: "Inconsolata", monospace;
+	font-size: 0.04px;
+	opacity: 0;
+	transform: translateY(-0.01px);
+	transition: all 0.1s ease-out;
+}
+.barchart-label-visible {
+	transform: translateY(0);
+	opacity: 1;
+}
+.barchart-label-bg {
+	stroke: var(--col-bg);
+	stroke-width: 0.01px;
+	stroke-opacity: 1;
+}

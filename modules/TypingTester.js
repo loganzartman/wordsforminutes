@@ -1,4 +1,4 @@
-import {html, useState, useEffect, useRef, useMemo} from "https://unpkg.com/htm/preact/standalone.mjs?module";
+import {html, useState, useEffect, useRef, useMemo} from "./preact.js";
 import TestSettings from "./TestSettings.js";
 import TextInput from "./TextInput.js";
 import WordScroller from "./WordScroller.js";

@@ -1,4 +1,4 @@
-import {render, html, useState, useEffect} from "https://unpkg.com/htm/preact/standalone.mjs?module";
+import {render, html, useState, useEffect} from "./preact.js";
 
 export default function TestSettings({onChange}={}) {
   const [enableSpeech, setEnableSpeech] = useState(false);
