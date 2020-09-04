@@ -195,16 +195,21 @@ button:active {
 	fill: var(--col-fg);
 	font-family: "Inconsolata", monospace;
 	font-size: 0.04px;
+	opacity: 1;
+	transform: translateY(0);
+	transition: all 0.2s cubic-bezier(.08,.82,.17,1);
+}
+.barchart-label-hidden {
 	opacity: 0;
 	transform: translateY(-0.01px);
-	transition: all 0.1s ease-out;
-}
-.barchart-label-visible {
-	transform: translateY(0);
-	opacity: 1;
 }
 .barchart-label-bg {
 	stroke: var(--col-bg);
 	stroke-width: 0.01px;
 	stroke-opacity: 1;
+}
+
+.barchart-axis {
+	stroke: var(--col-fg);
+	stroke-width: 0.005px;
 }

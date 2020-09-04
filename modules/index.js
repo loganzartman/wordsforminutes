@@ -9,7 +9,7 @@ const App = (props) => {
       <${TypingTester} />
       <${BarChart} 
         style=${{width: "500px", height: "500px"}}
-        data=${Array.from({length: 16}).map(() => Math.random())}
+        data=${Array.from({length: 16}).map((_, i, a) => Math.random() * i/a.length + 0.5)}
       />
     </main>
   `;
