@@ -5,6 +5,7 @@ import WordScroller from "./WordScroller.js";
 import useWordGetter from "./useWordGetter.js";
 import {unicodeEquals} from "./text.js";
 import {computeWpm, computeCorrect, computeWrong, meanWordLength} from "./stats.js";
+import BarChart from "./BarChart.js";
 
 const PAUSE_TIMEOUT = 1000;
 
@@ -115,6 +116,19 @@ export default function TypingTester() {
   const acc = numCorrect / Math.max(1, numCorrect + numWrong);
   const meanLen = useMemo(() => meanWordLength(history), [history]);
 
+  const barChartData = useMemo(() => 
+    Array.from(history
+      .filter(({event}) => event === "input")
+      .reduce((freq, {data}) => {
+        freq.set(data, (freq.get(data) ?? 0) + 1);
+        return freq;
+      }, new Map())
+      .entries()
+    )
+    .map(([k, v]) => v)
+    .sort((a, b) => b - a)
+  , [history]);
+
   return html`
     <button 
       class="reset-button"
@@ -148,5 +162,9 @@ export default function TypingTester() {
       <div class="stats-item" title="total words">words: ${numCorrect + numWrong}</div>
       <div class="stats-item" title="average word length">mean length: ${Math.round(meanLen)}</div>
     </div>
+    <${BarChart} 
+      style=${{width: "500px", height: "500px"}}
+      data=${barChartData}
+    />
   `;
 }
