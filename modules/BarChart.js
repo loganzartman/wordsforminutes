@@ -1,7 +1,7 @@
 import {html, useState, useMemo} from "./preact.js";
 
 export default function BarChart(props) {
-  const {data} = props;
+  const {data, horizontal} = props;
   const [tooltipIndex, setTooltipIndex] = useState(-1);
   const barSpacing = 0.2;
   const margin = 0.1;
@@ -20,6 +20,19 @@ export default function BarChart(props) {
   const spacePerBar = barSpacing / count;
   const barWidth = (plotWidth - spacePerBar) / count - spacePerBar;
 
+  const mainAxisLabelProps = {};
+  if (props.horizontal) {
+    mainAxisLabelProps["x"] = right;
+    mainAxisLabelProps["y"] = bottom;
+    mainAxisLabelProps["text-anchor"] = "left";
+    mainAxisLabelProps["dominant-baseline"] = "middle";
+  } else {
+    mainAxisLabelProps["x"] = left;
+    mainAxisLabelProps["y"] = top;
+    mainAxisLabelProps["text-anchor"] = "middle";
+    mainAxisLabelProps["dominant-baseline"] = "baseline";
+  }
+  const mainAxisLabelText = max.toLocaleString(undefined, {maximumFractionDigits: 2});
   const axes = html`
     <line
       class="barchart-axis"
@@ -35,23 +48,33 @@ export default function BarChart(props) {
       x2=${right}
       y2=${bottom}
     />
-    <text 
-      class="barchart-label"
-      x=${left + 0.01}
-      y=${top}
-      text-anchor="right"
-      dominant-baseline="hanging"
-    >
-      ${max.toLocaleString(undefined, {maximumFractionDigits: 2})}
-    </text>
+    <text class="barchart-label barchart-label-bg" ...${mainAxisLabelProps} >${mainAxisLabelText}</text>
+    <text class="barchart-label" ...${mainAxisLabelProps} >${mainAxisLabelText}</text>
   `;
 
-  const barDimensions = (x, i) => ({
-    x: left + spacePerBar * 0.5 + i / count * plotWidth, 
-    y: bottom - x / max * plotHeight,
-    width: barWidth,
-    height: x / max * plotHeight,
-  });
+  const barDimensions = (value, i) => {
+    const mainSize = horizontal ? plotWidth : plotHeight;
+    const crossSize = horizontal ? plotHeight : plotWidth;
+    const crossPos = spacePerBar * 0.5 + i / count * crossSize;
+    const mainBarSize = value / max * mainSize;
+    const crossBarSize = barWidth;
+
+    if (props.horizontal) {
+      return {
+        x: left,
+        y: top + crossPos,
+        width: mainBarSize,
+        height: crossBarSize
+      };
+    } else {
+      return {
+        x: left + crossPos,
+        y: bottom - mainBarSize,
+        width: crossBarSize,
+        height: mainBarSize
+      };
+    }
+  };
 
   const bars = useMemo(() => data.map((x, i) => {
     return html`
@@ -69,11 +92,19 @@ export default function BarChart(props) {
   const barLabels = useMemo(() => data.map((x, i) => {
     const label = x.toLocaleString(undefined, {maximumFractionDigits: 2});
     const dimensions = barDimensions(x, i);
-    const textProps = {
-      x: dimensions.x + dimensions.width / 2,
-      y: dimensions.y - 0.01,
-      ["text-anchor"]: "middle",
-    };
+
+    const textProps = {};
+    if (props.horizontal) {
+      textProps["text-anchor"] = "left";
+      textProps["dominant-baseline"] = "middle";
+      textProps.x = dimensions.x + dimensions.width + 0.02;
+      textProps.y = dimensions.y + dimensions.height / 2;
+    } else {
+      textProps["text-anchor"] = "middle";
+      textProps["dominant-baseline"] = "baseline";
+      textProps.x = dimensions.x + dimensions.width / 2;
+      textProps.y = dimensions.y - 0.02;
+    }
 
     const cls = i === tooltipIndex ? "" : "barchart-label-hidden";
     return html`
