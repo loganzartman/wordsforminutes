@@ -21,7 +21,7 @@ export class Chain {
     
     // descend tree
     let map = this.data;
-    for (let part of context) {
+    for (const part of context) {
       map = map.get(part)[0];
       if (!map)
         return false;
@@ -35,7 +35,7 @@ export class Chain {
 
     // build tree branch
     let map = this.data;
-    for (let part of context) {
+    for (const part of context) {
       if (!map.has(part))
         map.set(part, [new Map(), 0]);
       const [nextMap, count] = map.get(part);
@@ -55,7 +55,7 @@ export class Chain {
 
     // descend tree
     let map = this.data;
-    for (let part of context) {
+    for (const part of context) {
       map = map.get(part)[0];
       if (!map)
         return [];
@@ -122,7 +122,7 @@ export class TextGenerator {
     
     const choice = Math.random();
     let cumulativeProb = 0;
-    for (let [b, prob] of transitions) {
+    for (const [b, prob] of transitions) {
       cumulativeProb += prob;
       if (choice < cumulativeProb) {
         this.updateContext(b);
@@ -133,14 +133,14 @@ export class TextGenerator {
     throw new Error("Probabilities didn't sum to 1!");
   }
 
-  *getWord() {
+  *getWord(maxChars=16) {
     // discard starters for better quality
     while (this.context.length < this.chain.order)
-      for (let _ of this.getStarter()) {};
+      for (const _ of this.getStarter()) {};
 
     // yield items until word separator
-    for (let i = 0; i < 16; ++i) {
-      for (let tok of this.getToken()) {
+    for (let i = 0; i < maxChars; ++i) {
+      for (const tok of this.getToken()) {
         yield tok;
         if (/\p{Zs}/u.test(tok)) {
           return;
