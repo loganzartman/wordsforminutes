@@ -95,7 +95,7 @@ export default function BarChart(props) {
 
     const textProps = {};
     if (props.horizontal) {
-      textProps["text-anchor"] = "left";
+      textProps["text-anchor"] = "start";
       textProps["dominant-baseline"] = "middle";
       textProps.x = dimensions.x + dimensions.width + 0.02;
       textProps.y = dimensions.y + dimensions.height / 2;
