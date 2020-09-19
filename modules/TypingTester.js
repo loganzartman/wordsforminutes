@@ -101,6 +101,14 @@ export default function TypingTester() {
     setIsRecording(false);
   };
 
+  const handleInput = (input) => {
+    resetPauseTimeout();
+    if (input.composed) {
+      setHistory((history) => 
+        [...history, {event: "input", data: input.data, timestamp: Date.now()}]);
+    }
+  };
+
   const wpm = useMemo(() => computeWpm(history), [history]);
   const numCorrect = useMemo(() => computeCorrect(history), [history]);
   const numWrong = useMemo(() => computeWrong(history), [history]);
@@ -127,7 +135,7 @@ export default function TypingTester() {
       targetWord=${currentWords[0]}
       onWord=${handleWord}
       onBlur=${handleInputBlur}
-      onInput=${() => resetPauseTimeout()}
+      onInput=${handleInput}
     />
     <div class="stats-container">
       <div class="stats-item" title=${"statistics " + (isRecording ? "recording" : "paused")}>
