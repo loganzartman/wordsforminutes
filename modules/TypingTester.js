@@ -116,7 +116,7 @@ export default function TypingTester() {
   const acc = numCorrect / Math.max(1, numCorrect + numWrong);
   const meanLen = useMemo(() => meanWordLength(history), [history]);
 
-  const barChartData = useMemo(() => 
+  const barChartEntries = useMemo(() => 
     Array.from(history
       .filter(({event}) => event === "input")
       .reduce((freq, {data}) => {
@@ -125,9 +125,10 @@ export default function TypingTester() {
       }, new Map())
       .entries()
     )
-    .map(([k, v]) => v)
-    .sort((a, b) => b - a)
+    .sort(([_, a], [__, b]) => b - a)
   , [history]);
+  const barChartData = barChartEntries.map(([_, v]) => v);
+  const barChartLabels = barChartEntries.map(([k, _]) => k);
 
   return html`
     <button 
@@ -165,6 +166,7 @@ export default function TypingTester() {
     <${BarChart} 
       style=${{width: "500px", height: "500px"}}
       data=${barChartData}
+      labels=${barChartLabels}
     />
   `;
 }

@@ -1,7 +1,7 @@
 import {html, useState, useMemo} from "./preact.js";
 
 export default function BarChart(props) {
-  const {data, horizontal} = props;
+  const {data, labels, horizontal} = props;
   const [tooltipIndex, setTooltipIndex] = useState(-1);
   const barSpacing = 0.2;
   const margin = 0.1;
@@ -89,7 +89,7 @@ export default function BarChart(props) {
     `;
   }), [data]);
 
-  const barLabels = useMemo(() => data.map((x, i) => {
+  const valueLabels = useMemo(() => data.map((x, i) => {
     const label = x.toLocaleString(undefined, {maximumFractionDigits: 2});
     const dimensions = barDimensions(x, i);
 
@@ -115,11 +115,42 @@ export default function BarChart(props) {
     `;
   }), [data, tooltipIndex]);
 
+  const namedLabels = useMemo(() => {
+    if (!labels)
+      return null;
+    if (labels.length !== data.length)
+      throw new Error(`Length of labels (${labels.length}) must equal length of data (${data.length})`);
+
+    return labels.map((label, i) => {
+      const dimensions = barDimensions(0, i);
+      
+      const textProps = {};
+      if (props.horizontal) {
+        textProps["text-anchor"] = "end";
+        textProps["dominant-baseline"] = "middle";
+        textProps.x = dimensions.x - 0.01;
+        textProps.y = dimensions.y + dimensions.height / 2;
+      } else {
+        textProps["text-anchor"] = "middle";
+        textProps["dominant-baseline"] = "hanging";
+        textProps.x = dimensions.x + dimensions.width / 2;
+        textProps.y = dimensions.y + 0.01;
+      }
+
+      return html`
+        <g class="barchart-label">
+          <text ...${textProps}>${label}</text>
+        </g>
+      `;
+    });
+  }, [labels, data]);
+
   return html`
     <svg viewBox="0 0 1 1" style=${props.style ?? {}}>
       ${bars}
       ${axes}
-      ${barLabels}
+      ${valueLabels}
+      ${namedLabels}
     </svg>
   `;
 }
