@@ -1,7 +1,8 @@
 import {html, useState, useMemo} from "./preact.js";
 
-export default function BarChart(props) {
-  const {data, labels, horizontal} = props;
+const defaultFormatter = (value) => value.toLocaleString(undefined, {maximumFractionDigits: 2});
+
+export default function BarChart({style, data, labels, formatter=defaultFormatter, horizontal}={}) {
   const [tooltipIndex, setTooltipIndex] = useState(-1);
   const barSpacing = 0.2;
   const margin = 0.1;
@@ -21,7 +22,7 @@ export default function BarChart(props) {
   const barWidth = (plotWidth - spacePerBar) / count - spacePerBar;
 
   const mainAxisLabelProps = {};
-  if (props.horizontal) {
+  if (horizontal) {
     mainAxisLabelProps["x"] = right;
     mainAxisLabelProps["y"] = bottom;
     mainAxisLabelProps["text-anchor"] = "left";
@@ -32,7 +33,7 @@ export default function BarChart(props) {
     mainAxisLabelProps["text-anchor"] = "middle";
     mainAxisLabelProps["dominant-baseline"] = "baseline";
   }
-  const mainAxisLabelText = max.toLocaleString(undefined, {maximumFractionDigits: 2});
+  const mainAxisLabelText = formatter(max);
   const axes = html`
     <line
       class="barchart-axis"
@@ -59,7 +60,7 @@ export default function BarChart(props) {
     const mainBarSize = value / max * mainSize;
     const crossBarSize = barWidth;
 
-    if (props.horizontal) {
+    if (horizontal) {
       return {
         x: left,
         y: top + crossPos,
@@ -90,11 +91,11 @@ export default function BarChart(props) {
   }), [data]);
 
   const valueLabels = useMemo(() => data.map((x, i) => {
-    const label = x.toLocaleString(undefined, {maximumFractionDigits: 2});
+    const label = formatter(x);
     const dimensions = barDimensions(x, i);
 
     const textProps = {};
-    if (props.horizontal) {
+    if (horizontal) {
       textProps["text-anchor"] = "start";
       textProps["dominant-baseline"] = "middle";
       textProps.x = dimensions.x + dimensions.width + 0.02;
@@ -125,7 +126,7 @@ export default function BarChart(props) {
       const dimensions = barDimensions(0, i);
       
       const textProps = {};
-      if (props.horizontal) {
+      if (horizontal) {
         textProps["text-anchor"] = "end";
         textProps["dominant-baseline"] = "middle";
         textProps.x = dimensions.x - 0.01;
@@ -146,7 +147,7 @@ export default function BarChart(props) {
   }, [labels, data]);
 
   return html`
-    <svg viewBox="0 0 1 1" style=${props.style ?? {}}>
+    <svg viewBox="0 0 1 1" style=${style ?? {}}>
       ${bars}
       ${axes}
       ${valueLabels}
