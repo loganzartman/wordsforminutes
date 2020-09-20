@@ -157,7 +157,8 @@ button:active {
 
 .stats-container {
   display: flex;
-  flex-direction: row;
+	flex-direction: row;
+	margin-bottom: 2rem;
 }
 
 .stats-item {
@@ -174,6 +175,12 @@ button:active {
 
 .stats-item>i {
   font-size: 1.5rem;
+}
+
+.barchart-title {
+	text-align: center;
+	font-size: 1.25rem;
+	transform: translateY(1rem);
 }
 
 .barchart-bar {

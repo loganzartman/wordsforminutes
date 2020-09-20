@@ -2,7 +2,7 @@ import {html, useState, useMemo} from "./preact.js";
 
 const defaultFormatter = (value) => value.toLocaleString(undefined, {maximumFractionDigits: 2});
 
-export default function BarChart({style, data, labels, formatter=defaultFormatter, horizontal}={}) {
+export default function BarChart({style, data, labels, formatter=defaultFormatter, horizontal, title}={}) {
   const [tooltipIndex, setTooltipIndex] = useState(-1);
   const barSpacing = 0.1;
   const margin = 0.1;
@@ -146,12 +146,18 @@ export default function BarChart({style, data, labels, formatter=defaultFormatte
     });
   }, [labels, data]);
 
+  const titleElem = title && html`
+    <div class="barchart-title">${title}</div>
+  `;
   return html`
-    <svg viewBox="0 0 1 1" style=${style ?? {}}>
-      ${bars}
-      ${axes}
-      ${valueLabels}
-      ${namedLabels}
-    </svg>
+    <div style=${{display: "inline-flex", flexDirection: "column"}}>
+      ${titleElem}
+      <svg viewBox="0 0 1 1" style=${style ?? {}}>
+        ${bars}
+        ${axes}
+        ${valueLabels}
+        ${namedLabels}
+      </svg>
+    </div>
   `;
 }

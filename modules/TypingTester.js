@@ -183,11 +183,13 @@ export default function TypingTester() {
       <div class="stats-item" title="average word length">mean length: ${Math.round(meanLen)}</div>
     </div>
     <${BarChart} 
+      title="characters typed"
       style=${{width: "400px", height: "400px"}}
       data=${barChartData}
       labels=${barChartLabels}
     />
     <${BarChart} 
+      title="error rate by character"
       style=${{width: "400px", height: "400px"}}
       data=${mistakeRateData}
       labels=${mistakeRateLabels}
