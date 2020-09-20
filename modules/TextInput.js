@@ -1,5 +1,4 @@
 import {html, useState, useRef, useEffect} from "./preact.js";
-import {almostStartsWith} from "./text.js";
 
 const endingSpace = /\p{Zs}$/u;
 
@@ -10,13 +9,16 @@ export default ({onWord, onBlur, onInput, targetWord}={}) => {
   const inputRef = useRef();
 
   const handleInput = (event) => {
-    const text = event.target.value;
-
     if (showPlaceholder)
       setShowPlaceholder(false);
+    if (event.isComposing)
+      return; // wait for user to finish composing before updating anything
+    
+    const text = event.target.value;
 
-    setPartiallyWrong(
-      targetWord && !almostStartsWith(targetWord, text));
+    const isPartiallyWrong = targetWord && !targetWord.normalize().startsWith(text.normalize());
+    if (partiallyWrong ^ isPartiallyWrong)
+      setPartiallyWrong(isPartiallyWrong);
 
     if (endingSpace.test(text)) {
       if (typeof onWord === "function") {
