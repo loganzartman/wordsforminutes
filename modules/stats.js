@@ -53,3 +53,22 @@ export const computeCorrect = (history) => history
 export const computeWrong = (history) => history
   .filter(e => e.event === "word typed")
   .reduce((n, e) => n + (!e.correct ? 1 : 0), 0);
+
+export const computeCharMistakeRate = (history) => {
+  const increment = (map, item) => {
+    map.set(item, (map.get(item) ?? 0) + 1);
+    return map;
+  };
+
+  const charFreq = history
+    .filter(({event}) => event === "word typed")
+    .flatMap(({expected}) => Array.from(expected))
+    .reduce((map, char) => increment(map, char), new Map());
+  const mistakeFreq = history
+    .filter(({event}) => event === "word typed")
+    .filter(({correct}) => !correct)
+    .flatMap(({expected}) => Array.from(expected))
+    .reduce((map, char) => increment(map, char), new Map());
+  return Array.from(mistakeFreq.entries())
+    .map(([char, freq]) => [char, freq / charFreq.get(char)]);
+};

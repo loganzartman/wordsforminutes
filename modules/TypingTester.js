@@ -4,7 +4,13 @@ import TextInput from "./TextInput.js";
 import WordScroller from "./WordScroller.js";
 import useWordGetter from "./useWordGetter.js";
 import {unicodeEquals} from "./text.js";
-import {computeWpm, computeCorrect, computeWrong, meanWordLength} from "./stats.js";
+import {
+  computeWpm,
+  computeCorrect,
+  computeWrong,
+  computeCharMistakeRate,
+  meanWordLength
+} from "./stats.js";
 import BarChart from "./BarChart.js";
 
 const PAUSE_TIMEOUT = 1000;
@@ -135,6 +141,14 @@ export default function TypingTester() {
   const barChartData = barChartEntries.map(([_, v]) => v);
   const barChartLabels = barChartEntries.map(([k, _]) => k);
 
+  const mistakeRateEntries = useMemo(
+    () => computeCharMistakeRate(history)
+      .sort(([_, a], [__, b]) => b - a),
+    [history]
+  );
+  const mistakeRateData = mistakeRateEntries.map(([_, v]) => v);
+  const mistakeRateLabels = mistakeRateEntries.map(([k, _]) => k);
+
   return html`
     <button 
       class="reset-button"
@@ -169,9 +183,16 @@ export default function TypingTester() {
       <div class="stats-item" title="average word length">mean length: ${Math.round(meanLen)}</div>
     </div>
     <${BarChart} 
-      style=${{width: "500px", height: "500px"}}
+      style=${{width: "400px", height: "400px"}}
       data=${barChartData}
       labels=${barChartLabels}
+    />
+    <${BarChart} 
+      style=${{width: "400px", height: "400px"}}
+      data=${mistakeRateData}
+      labels=${mistakeRateLabels}
+      formatter=${(value) => value.toLocaleString(undefined, {style: "percent"})}
+      horizontal
     />
   `;
 }
