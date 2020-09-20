@@ -4,7 +4,7 @@ const defaultFormatter = (value) => value.toLocaleString(undefined, {maximumFrac
 
 export default function BarChart({style, data, labels, formatter=defaultFormatter, horizontal}={}) {
   const [tooltipIndex, setTooltipIndex] = useState(-1);
-  const barSpacing = 0.2;
+  const barSpacing = 0.1;
   const margin = 0.1;
 
   const width = 1;
@@ -25,13 +25,13 @@ export default function BarChart({style, data, labels, formatter=defaultFormatte
   if (horizontal) {
     mainAxisLabelProps["x"] = right;
     mainAxisLabelProps["y"] = bottom;
-    mainAxisLabelProps["text-anchor"] = "left";
+    mainAxisLabelProps["text-anchor"] = "start";
     mainAxisLabelProps["dominant-baseline"] = "middle";
   } else {
-    mainAxisLabelProps["x"] = left;
+    mainAxisLabelProps["x"] = left - 0.01;
     mainAxisLabelProps["y"] = top;
-    mainAxisLabelProps["text-anchor"] = "middle";
-    mainAxisLabelProps["dominant-baseline"] = "baseline";
+    mainAxisLabelProps["text-anchor"] = "end";
+    mainAxisLabelProps["dominant-baseline"] = "hanging";
   }
   const mainAxisLabelText = formatter(max);
   const axes = html`
