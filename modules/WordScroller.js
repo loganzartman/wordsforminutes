@@ -17,6 +17,7 @@ export default function WordScroller({words=[], typedWords=[]}={}) {
         key=${word}
         ref=${i === 0 ? firstWordRef : undefined}
         class=${classes.join(" ")}
+        aria-hidden=${i !== 0}
       >
         ${word}
       </div>
@@ -47,8 +48,8 @@ export default function WordScroller({words=[], typedWords=[]}={}) {
   }, [words]);
 
   return html`
-    <div ref=${scrollerRef} class="scroller-words">
-      <div class="scroller-words-prev">
+    <div ref=${scrollerRef} class="scroller-words" aria-live="assertive">
+      <div class="scroller-words-prev" aria-hidden>
         ${typedWordsElems}
       </div>
       ${wordsElems}
