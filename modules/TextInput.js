@@ -60,10 +60,8 @@ export default ({onWord, onBlur, onInput, targetWord}={}) => {
         onInput=${handleInput}
         onBlur=${handleBlur}
         onKeyDown=${handleKeyDown}
+        aria-label="typing test text input"
       />
-      <label for="text-input" style="display: none">
-        typing test text input
-      </label>
     </div>
   `;
 };
