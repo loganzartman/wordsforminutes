@@ -12,6 +12,7 @@ import {
   meanWordLength
 } from "./stats.js";
 import BarChart from "./BarChart.js";
+import ShowHide from "./ShowHide.js";
 
 const PAUSE_TIMEOUT = 1000;
 const MAX_HISTORY_ITEMS = 10000;
@@ -171,30 +172,32 @@ export default function TypingTester() {
       onBlur=${handleInputBlur}
       onInput=${handleInput}
     />
-    <div class="stats-container">
-      <div class="stats-item" title=${"statistics " + (isRecording ? "recording" : "paused")}>
-        <i class="material-icons">
-          ${isRecording ? "play_arrow" : "pause"}
-        </i>
+    <${ShowHide} hidden=${isRecording}>
+      <div class="stats-container">
+        <div class="stats-item" title=${"statistics " + (isRecording ? "recording" : "paused")}>
+          <i class="material-icons">
+            ${isRecording ? "play_arrow" : "pause"}
+          </i>
+        </div>
+        <div class="stats-item" title="words per minute">wpm: ${wpm.toFixed(0)}</div>
+        <div class="stats-item" title="accuracy">acc: ${(acc * 100).toFixed(0)}%</div>
+        <div class="stats-item" title="total words">words: ${numCorrect + numWrong}</div>
+        <div class="stats-item" title="average word length">mean length: ${Math.round(meanLen)}</div>
       </div>
-      <div class="stats-item" title="words per minute">wpm: ${wpm.toFixed(0)}</div>
-      <div class="stats-item" title="accuracy">acc: ${(acc * 100).toFixed(0)}%</div>
-      <div class="stats-item" title="total words">words: ${numCorrect + numWrong}</div>
-      <div class="stats-item" title="average word length">mean length: ${Math.round(meanLen)}</div>
-    </div>
-    <${BarChart} 
-      title="characters typed"
-      style=${{width: "400px", height: "400px"}}
-      data=${barChartData}
-      labels=${barChartLabels}
-    />
-    <${BarChart} 
-      title="error rate by character"
-      style=${{width: "400px", height: "400px"}}
-      data=${mistakeRateData}
-      labels=${mistakeRateLabels}
-      formatter=${(value) => value.toLocaleString(undefined, {style: "percent"})}
-      horizontal
-    />
+      <${BarChart} 
+        title="characters typed"
+        style=${{width: "400px", height: "400px"}}
+        data=${barChartData}
+        labels=${barChartLabels}
+      />
+      <${BarChart} 
+        title="error rate by character"
+        style=${{width: "400px", height: "400px"}}
+        data=${mistakeRateData}
+        labels=${mistakeRateLabels}
+        formatter=${(value) => value.toLocaleString(undefined, {style: "percent"})}
+        horizontal
+      />
+    <//>
   `;
 }
