@@ -8,6 +8,7 @@ import {computeWpm, computeCorrect, computeWrong, meanWordLength} from "./stats.
 import BarChart from "./BarChart.js";
 
 const PAUSE_TIMEOUT = 1000;
+const MAX_HISTORY_ITEMS = 10000;
 
 export default function TypingTester() {
   const [isRecording, setIsRecording] = useState(false);
@@ -104,9 +105,11 @@ export default function TypingTester() {
 
   const handleInput = (input) => {
     resetPauseTimeout();
-    if (input.composed) {
-      setHistory((history) => 
-        [...history, {event: "input", data: input.data, timestamp: Date.now()}]);
+    if (!input.isComposing) {
+      setHistory((history) => [
+        ...history, 
+        {event: "input", data: input.data, timestamp: Date.now()}
+      ].slice(-MAX_HISTORY_ITEMS));
     }
   };
 
@@ -119,6 +122,7 @@ export default function TypingTester() {
   const barChartEntries = useMemo(() => 
     Array.from(history
       .filter(({event}) => event === "input")
+      .filter(({data}) => /\p{L}/u.test(data))
       .reduce((freq, {data}) => {
         freq.set(data, (freq.get(data) ?? 0) + 1);
         return freq;
@@ -126,6 +130,7 @@ export default function TypingTester() {
       .entries()
     )
     .sort(([_, a], [__, b]) => b - a)
+    .slice(0, 10)
   , [history]);
   const barChartData = barChartEntries.map(([_, v]) => v);
   const barChartLabels = barChartEntries.map(([k, _]) => k);
