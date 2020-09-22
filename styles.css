@@ -25,6 +25,7 @@ button, label {
 
 button {
 	padding: 0.5rem 1rem;
+	margin: 0.25rem;
 
 	font-family: "Inconsolata", monospace;
 	font-weight: 400;
@@ -156,12 +157,13 @@ button:active {
 }
 
 .show-hide {
-	transition: all 0.2s ease-out;
+	transition-property: all;
+	transition-timing-function: ease-out;
 	opacity: 1;
 	clip-path: inset(0 0 0 0);
 }
 .show-hide-hidden {
-	transition: all 0.2s ease-in;
+	transition-timing-function: ease-in;
 	opacity: 0;
 	clip-path: inset(0 0 100% 0);
 }
