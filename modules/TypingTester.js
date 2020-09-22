@@ -23,6 +23,7 @@ export default function TypingTester() {
 
   const [history, setHistory] = useState([]);
   const [settings, setSettings] = useState({});
+  const [showSettings, setShowSettings] = useState(false);
   const [currentWords, setCurrentWords] = useState([]);
   const [typedWords, setTypedWords] = useState([]);
 
@@ -151,15 +152,15 @@ export default function TypingTester() {
   const mistakeRateLabels = mistakeRateEntries.map(([k, _]) => k);
 
   return html`
-    <button 
-      class="reset-button"
-      onClick=${() => doReset()}
-    >
+    <button onClick=${() => doReset()}>
       reset
     </button>
-    <${TestSettings}
-      onChange=${(s) => setSettings(s)}
-    />
+    <button onClick=${() => setShowSettings((s) => !s)}>
+      ${showSettings ? "hide settings" : "show settings"}
+    </button>
+    <${ShowHide} hidden=${!showSettings}>
+      <${TestSettings} onChange=${(s) => setSettings(s)} />
+    <//>
     <div class="words-area">
       <${WordScroller}
         words=${currentWords}
