@@ -7,8 +7,7 @@ export class Chain {
       throw new Error(`order must be >= 1, was ${order}`);
 
     this.order = order;
-
-    this.data = new Map();
+    this.data = {};
   }
 
   empty() {
@@ -22,7 +21,7 @@ export class Chain {
     // descend tree
     let map = this.data;
     for (const part of context) {
-      map = map.get(part)[0];
+      map = map[part];
       if (!map)
         return false;
     }
@@ -36,17 +35,15 @@ export class Chain {
     // build tree branch
     let map = this.data;
     for (const part of context) {
-      if (!map.has(part))
-        map.set(part, [new Map(), 0]);
-      const [nextMap, count] = map.get(part);
-      map.set(part, [nextMap, count + 1]);
-      map = nextMap;
+      if (!(part in map))
+        map[part] = {};
+      map = map[part];
     }
 
     // increment count
-    if (!map.has(word))
-      map.set(word, [null, 0]);
-    map.set(word, [null, map.get(word)[0] + 1]);
+    if (!(word in map))
+      map[word] = 0;
+    ++map[word];
   }
 
   transitionsFor(context) {
@@ -56,14 +53,14 @@ export class Chain {
     // descend tree
     let map = this.data;
     for (const part of context) {
-      map = map.get(part)[0];
+      map = map[part];
       if (!map)
         return [];
     }
 
-    const entries = Array.from(map.entries());
-    const total = entries.reduce((sum, [_, [__, count]]) => sum + count, 0);
-    return entries.map(([word, [_, count]]) => [word, count / total]);
+    const entries = Array.from(Object.entries(map));
+    const total = entries.reduce((sum, [_, count]) => sum + count, 0);
+    return entries.map(([word, count]) => [word, count / total]);
   }
 }
 
@@ -100,9 +97,9 @@ export class TextGenerator {
   *getStarter() {
     let map = this.chain.data;
     for (let i = 0; i < this.chain.order; ++i) {
-      const keys = Array.from(map.keys());
+      const keys = Array.from(Object.keys(map));
       const selected = keys[Math.floor(Math.random() * keys.length)];
-      map = map.get(selected)[0];
+      map = map[selected];
       this.updateContext(selected);
       yield selected;
     }
