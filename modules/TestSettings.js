@@ -1,10 +1,11 @@
 import {render, html, useState, useEffect} from "./preact.js";
+import useStoredState from "./useStoredState.js";
 
 export default function TestSettings({onChange}={}) {
-  const [enableSpeech, setEnableSpeech] = useState(false);
-  const [coherence, setCoherence] = useState(3);
-  const [punctuation, setPunctuation] = useState(false);
-  const [caps, setCaps] = useState(false);
+  const [enableSpeech, setEnableSpeech] = useStoredState(false, "settingsEnableSpeech");
+  const [coherence, setCoherence] = useStoredState(3, "settingsCoherence");
+  const [punctuation, setPunctuation] = useStoredState(false, "settingsPunctuation");
+  const [caps, setCaps] = useStoredState(false, "settingsCaps");
 
   useEffect(() => {
     if (onChange) {
