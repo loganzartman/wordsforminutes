@@ -1,13 +1,22 @@
-import {html, useState, useMemo} from "./preact.js";
+import {html, useState, useRef, useLayoutEffect} from "./preact.js";
 
 const defaultFormatter = (value) => value.toLocaleString(undefined, {maximumFractionDigits: 2});
 const defaultPairFormatter = (x, y) => `${defaultFormatter(x)}, ${defaultFormatter(y)}`;
 
 export default function ScatterPlot({style, xData, yData, formatter=defaultFormatter, pairFormatter=defaultPairFormatter, title}={}) {
+  const containerRef = useRef();
   const [tooltipIndex, setTooltipIndex] = useState(-1);
+
+  const [aspectRatio, setAspectRatio] = useState(1);
+  useLayoutEffect(() => {
+    const newAspectRatio = containerRef.current.offsetWidth / containerRef.current.offsetHeight;
+    if (newAspectRatio && newAspectRatio !== aspectRatio)
+      setAspectRatio(newAspectRatio);
+  });
+
   const margin = 0.1;
 
-  const width = 1;
+  const width = aspectRatio;
   const height = 1;
   const left = margin;
   const right = width - margin;
@@ -106,9 +115,9 @@ export default function ScatterPlot({style, xData, yData, formatter=defaultForma
     <div class="barchart-title">${title}</div>
   `;
   return html`
-    <div style=${{display: "inline-flex", flexDirection: "column"}}>
+    <div ref=${containerRef} style=${{display: "inline-flex", flexDirection: "column"}}>
       ${titleElem}
-      <svg viewBox="0 0 1 1" style=${style ?? {}}>
+      <svg viewBox="0 0 ${aspectRatio} 1" style=${style ?? {}}>
         ${axes}
         ${line}
         ${points}
