@@ -3,7 +3,7 @@ import {html, useState, useRef, useLayoutEffect} from "./preact.js";
 const defaultFormatter = (value) => value.toLocaleString(undefined, {maximumFractionDigits: 2});
 const defaultPairFormatter = (x, y) => `${defaultFormatter(x)}, ${defaultFormatter(y)}`;
 
-export default function ScatterPlot({style, xData, yData, formatter=defaultFormatter, pairFormatter=defaultPairFormatter, title}={}) {
+export default function ScatterPlot({style, xData, yData, breakX=false, breakY=false, xFormatter=defaultFormatter, yFormatter=defaultFormatter, pairFormatter=defaultPairFormatter, title}={}) {
   const containerRef = useRef();
   const [tooltipIndex, setTooltipIndex] = useState(-1);
 
@@ -27,6 +27,8 @@ export default function ScatterPlot({style, xData, yData, formatter=defaultForma
 
   const xMax = Math.max(...xData);
   const yMax = Math.max(...yData);
+  const xMin = Math.min(...xData);
+  const yMin = Math.min(...yData);
 
   const yAxisLabelProps = {
     x: left - 0.01,
@@ -41,8 +43,8 @@ export default function ScatterPlot({style, xData, yData, formatter=defaultForma
     "dominant-baseline": "middle",
   };
 
-  const xAxisLabelText = formatter(xMax);
-  const yAxisLabelText = formatter(yMax);
+  const xAxisLabelText = xFormatter(xMax);
+  const yAxisLabelText = yFormatter(yMax);
   const axes = html`
     <line
       class="barchart-axis"
@@ -66,8 +68,13 @@ export default function ScatterPlot({style, xData, yData, formatter=defaultForma
 
   const pointsData = [];
   for (let i = 0; i < xData.length; ++i) {
-    const x = left + plotWidth * xData[i] / xMax;
-    const y = bottom - plotHeight * yData[i] / yMax;
+    const xOffset = breakX ? -xMin : 0;
+    const yOffset = breakY ? -yMin : 0;
+    const xRange = breakX ? (xMax - xMin) : xMax;
+    const yRange = breakY ? (yMax - yMin) : yMax;
+
+    const x = left + (plotWidth * (xData[i] + xOffset) / xRange);
+    const y = bottom - (plotHeight * (yData[i] + yOffset) / yRange);
     pointsData.push([x, y]);
   }
 
