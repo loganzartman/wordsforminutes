@@ -86,7 +86,7 @@ export default function ScatterPlot({style, xData, yData, formatter=defaultForma
   });
 
   const pointLabels = pointsData.map(([x, y], i) => {
-    const label = pairFormatter(x, y);
+    const label = pairFormatter(xData[i], yData[i]);
 
     const textProps = {
       "text-anchor": "middle",
