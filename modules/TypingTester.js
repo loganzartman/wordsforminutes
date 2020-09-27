@@ -12,6 +12,7 @@ import {
   meanWordLength
 } from "./stats.js";
 import BarChart from "./BarChart.js";
+import ScatterPlot from "./ScatterPlot.js";
 import ShowHide from "./ShowHide.js";
 
 const PAUSE_TIMEOUT = 1000;
@@ -198,6 +199,13 @@ export default function TypingTester() {
         labels=${mistakeRateLabels}
         formatter=${(value) => value.toLocaleString(undefined, {style: "percent"})}
         horizontal
+      />
+      <${ScatterPlot} 
+        title="scatter test"
+        style=${{width: "400px", height: "400px"}}
+        xData=${Array.from({length: 50}).map((_, i) => Math.random())}
+        yData=${Array.from({length: 50}).map((_, i) => Math.random())}
+        labels=${null}
       />
     <//>
   `;

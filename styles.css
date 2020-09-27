@@ -212,6 +212,7 @@ button:active {
 }
 
 .barchart-label {
+	pointer-events: none;
 	fill: var(--col-fg);
 	font-family: "Inconsolata", monospace;
 	font-size: 0.04px;
@@ -231,5 +232,28 @@ button:active {
 
 .barchart-axis {
 	stroke: var(--col-fg);
+	stroke-width: 0.005px;
+}
+
+.scatterplot-point {
+	fill: var(--col-a1);
+	stroke: var(--col-a1);
+	stroke-opacity: 0.8;
+	stroke-width: 0;
+	transition: stroke-width 0.2s ease-out;
+}
+.scatterplot-point:hover {
+	stroke-opacity: 1.0;
+	stroke-width: 0.03px;
+	transition: none;
+}
+.scatterplot-point-area {
+	fill: transparent;
+	stroke: none;
+}
+.scatterplot-line {
+	fill: none;
+	stroke: var(--col-a1);
+	stroke-opacity: 0.6;
 	stroke-width: 0.005px;
 }
