@@ -6,6 +6,7 @@ import useWordGetter from "./useWordGetter.js";
 import {unicodeEquals} from "./text.js";
 import {
   computeWpm,
+  computeWpmPrefix,
   computeCorrect,
   computeWrong,
   computeCharMistakeRate,
@@ -152,6 +153,10 @@ export default function TypingTester() {
   const mistakeRateData = mistakeRateEntries.map(([_, v]) => v);
   const mistakeRateLabels = mistakeRateEntries.map(([k, _]) => k);
 
+  const wpmPrefix = Array.from(computeWpmPrefix(history)).filter(({wpm}) => wpm > 0).slice(-50);
+  const wpmTimes = wpmPrefix.map(({timestamp}) => timestamp - wpmPrefix[0].timestamp);
+  const wpmValues = wpmPrefix.map(({wpm}) => wpm);
+  
   return html`
     <button onClick=${() => doReset()}>
       reset
@@ -201,10 +206,10 @@ export default function TypingTester() {
         horizontal
       />
       <${ScatterPlot} 
-        title="scatter test"
-        style=${{width: "400px", height: "400px"}}
-        xData=${Array.from({length: 50}).map((_, i) => Math.random())}
-        yData=${Array.from({length: 50}).map((_, i) => Math.random())}
+        title="recent wpm plot"
+        style=${{width: "800px", height: "400px"}}
+        xData=${wpmTimes}
+        yData=${wpmValues}
         labels=${null}
       />
     <//>

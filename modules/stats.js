@@ -8,7 +8,14 @@ export const meanWordLength = (history) => {
   return total / wordEvents.length;
 }
 
-export const computeWpm = (history, {lengthAdjusted=true}={}) => {
+export const last = (iterable) => {
+  let result;
+  for (const item of iterable)
+    result = item;
+  return result;
+};
+
+export function* computeWpmPrefix(history, {lengthAdjusted=true}={}) {
   const meanLen = meanWordLength(history);
 
   let timerRunning = false;
@@ -16,18 +23,19 @@ export const computeWpm = (history, {lengthAdjusted=true}={}) => {
   let words = 0;
   let duration_ms = 0;
   
-  for (let item of history) {
-    const {event} = item;
+  for (let i = 0; i < history.length; ++i) {
+    const item = history[i];
+    const {event, timestamp} = item;
     if (event === "start") {
       timerRunning = true;
-      timerStart = item.timestamp;
+      timerStart = timestamp;
     }
-    if (event === "stop") {
+    else if (event === "stop") {
       timerRunning = false;
     }
-    if (event === "word typed") {
+    else if (event === "word typed") {
       if (timerRunning) {
-        duration_ms += item.timestamp - timerStart;
+        duration_ms += timestamp - timerStart;
         if (item.correct) {
           if (lengthAdjusted)
             words += unicodeLength(item.typed) / meanLen;
@@ -36,14 +44,21 @@ export const computeWpm = (history, {lengthAdjusted=true}={}) => {
         }
       }
       timerRunning = true;
-      timerStart = item.timestamp;
+      timerStart = timestamp;
     }
+    else {
+      continue;
+    }
+
+    let wpm = 0;
+    if (words > 0)
+      wpm = words / (duration_ms / 1000 / 60); 
+    yield {i, timestamp, wpm};
   }
+};
 
-  if (words === 0)
-    return 0;
-
-  return words / (duration_ms / 1000 / 60);
+export const computeWpm = (history, args) => {
+  return last(computeWpmPrefix(history, args))?.wpm ?? 0;
 };
 
 export const computeCorrect = (history) => history
