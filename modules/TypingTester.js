@@ -210,7 +210,11 @@ export default function TypingTester() {
         style=${{width: "800px", height: "400px"}}
         xData=${wpmTimes}
         yData=${wpmValues}
-        labels=${null}
+        breakX
+        breakY
+        xFormatter=${(x) => ""}
+        yFormatter=${(y) => y.toLocaleString(undefined, {maximumFractionDigits: 0})}
+        pairFormatter=${(_, y) => y.toLocaleString(undefined, {maximumFractionDigits: 0})}
       />
     <//>
   `;
