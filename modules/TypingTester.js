@@ -15,6 +15,7 @@ import {
 import BarChart from "./BarChart.js";
 import ScatterPlot from "./ScatterPlot.js";
 import ShowHide from "./ShowHide.js";
+import useStoredState from './useStoredState.js';
 
 const PAUSE_TIMEOUT = 1000;
 const MAX_HISTORY_ITEMS = 10000;
@@ -23,7 +24,7 @@ export default function TypingTester() {
   const [isRecording, setIsRecording] = useState(false);
   const pauseTimeout = useRef(null);
 
-  const [history, setHistory] = useState([]);
+  const [history, setHistory] = useStoredState([], "history");
   const [settings, setSettings] = useState({});
   const [showSettings, setShowSettings] = useState(false);
   const [currentWords, setCurrentWords] = useState([]);
@@ -50,7 +51,7 @@ export default function TypingTester() {
     resetWords();
   };
 
-  useEffect(() => doReset(), [wordGetter]);
+  useEffect(() => resetWords(), [wordGetter]);
 
   useEffect(() => {
     if (isRecording) {
@@ -105,7 +106,7 @@ export default function TypingTester() {
         typed,
         correct: unicodeEquals(expected, typed),
         timestamp: Date.now()
-      }];
+      }].slice(-MAX_HISTORY_ITEMS);
     });
   };
 
@@ -115,12 +116,6 @@ export default function TypingTester() {
 
   const handleInput = (input) => {
     resetPauseTimeout();
-    if (!input.isComposing) {
-      setHistory((history) => [
-        ...history, 
-        {event: "input", data: input.data, timestamp: Date.now()}
-      ].slice(-MAX_HISTORY_ITEMS));
-    }
   };
 
   const wpm = useMemo(() => computeWpm(history), [history]);
@@ -131,10 +126,11 @@ export default function TypingTester() {
 
   const barChartEntries = useMemo(() => 
     Array.from(history
-      .filter(({event}) => event === "input")
-      .filter(({data}) => /\p{L}/u.test(data))
-      .reduce((freq, {data}) => {
-        freq.set(data, (freq.get(data) ?? 0) + 1);
+      .filter(({event}) => event === "word typed")
+      .flatMap(({typed}) => Array.from(typed))
+      .filter((char) => /\p{L}/u.test(char))
+      .reduce((freq, char) => {
+        freq.set(char, (freq.get(char) ?? 0) + 1);
         return freq;
       }, new Map())
       .entries()
