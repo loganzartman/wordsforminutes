@@ -38,6 +38,9 @@ export default function WordScroller({words=[], typedWords=[]}={}) {
 
   // smooth scroll effect
   useLayoutEffect(() => {
+    if (!firstWordRef.current)
+      return;
+    
     scrollerRef.current.style.transition = "none"; // don't animate
     scrollerRef.current.style.transform = `translateX(${scrollDistance}px)`;
     scrollerRef.current.offsetWidth; // force reflow
