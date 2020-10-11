@@ -54,7 +54,14 @@ button:active {
 	margin-top: 6rem;
 }
 
+.title-container {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
 .title {
+	flex-grow: 1;
 	font-size: 2.5rem;
 
 	color: var(--col-a1);

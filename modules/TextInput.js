@@ -1,12 +1,15 @@
 import {html, useState, useRef, useEffect} from "./preact.js";
+import {useText} from "./preact-i18n.js";
 
 const endingSpace = /\p{Zs}$/u;
 
 export default ({onWord, onBlur, onInput, targetWord}={}) => {
-  const placeholder = "type here to start";
   const [showPlaceholder, setShowPlaceholder] = useState(true);
   const [partiallyWrong, setPartiallyWrong] = useState(false);
   const inputRef = useRef();
+  const {placeholder} = useText({
+    placeholder: "type_here_to_start"
+  });
 
   const handleInput = (event) => {
     if (showPlaceholder)

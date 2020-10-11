@@ -1,4 +1,5 @@
 import {html, useState, useEffect, useRef, useMemo} from "./preact.js";
+import {Text} from "./preact-i18n.js";
 import TestSettings from "./TestSettings.js";
 import TextInput from "./TextInput.js";
 import WordScroller from "./WordScroller.js";
@@ -153,12 +154,15 @@ export default function TypingTester() {
   const wpmTimes = wpmPrefix.map(({timestamp}) => timestamp - wpmPrefix[0].timestamp);
   const wpmValues = wpmPrefix.map(({wpm}) => wpm);
   
+  const hideSettingsText = html`<${Text} id="hide_settings_button">hide settings<//>`;
+  const showSettingsText = html`<${Text} id="show_settings_button">show settings<//>`;
+
   return html`
     <button onClick=${() => doReset()}>
-      reset
+      <${Text} id="reset_button">reset<//>
     </button>
     <button onClick=${() => setShowSettings((s) => !s)}>
-      ${showSettings ? "hide settings" : "show settings"}
+      ${showSettings ? hideSettingsText : showSettingsText}
     </button>
     <${ShowHide} hidden=${!showSettings}>
       <${TestSettings} onChange=${(s) => setSettings(s)} />
@@ -182,19 +186,19 @@ export default function TypingTester() {
             ${isRecording ? "play_arrow" : "pause"}
           </i>
         </div>
-        <div class="stats-item" title="words per minute">wpm: ${wpm.toFixed(0)}</div>
-        <div class="stats-item" title="accuracy">acc: ${(acc * 100).toFixed(0)}%</div>
-        <div class="stats-item" title="total words">words: ${numCorrect + numWrong}</div>
-        <div class="stats-item" title="average word length">mean length: ${Math.round(meanLen)}</div>
+        <div class="stats-item" title="words per minute"><${Text} id="stats.wpm">wpm<//>: ${wpm.toFixed(0)}</div>
+        <div class="stats-item" title="accuracy"><${Text} id="stats.accuracy">accuracy<//>: ${(acc * 100).toFixed(0)}%</div>
+        <div class="stats-item" title="total words"><${Text} id="stats.word_count">words<//>: ${numCorrect + numWrong}</div>
+        <div class="stats-item" title="average word length"><${Text} id="stats.mean_length">mean length<//>: ${Math.round(meanLen)}</div>
       </div>
       <${BarChart} 
-        title="characters typed"
+        title=${html`<${Text} id="charts.characters_typed">characters typed<//>`}
         style=${{width: "400px", height: "400px"}}
         data=${barChartData}
         labels=${barChartLabels}
       />
       <${BarChart} 
-        title="error rate by character"
+        title=${html`<${Text} id="charts.error_rate">error rate<//>`}
         style=${{width: "400px", height: "400px"}}
         data=${mistakeRateData}
         labels=${mistakeRateLabels}
@@ -202,7 +206,7 @@ export default function TypingTester() {
         horizontal
       />
       <${ScatterPlot} 
-        title="recent wpm plot"
+        title=${html`<${Text} id="charts.wpm_plot">wpm plot<//>`}
         style=${{width: "800px", height: "400px"}}
         xData=${wpmTimes}
         yData=${wpmValues}

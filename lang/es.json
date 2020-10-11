@@ -1,3 +1,24 @@
 {
-  "test": "hola"
+  "test": "hola",
+  "reset_button": "reiniciar",
+  "hide_settings_button": "ocultar ajustes",
+  "show_settings_button": "mostrar ajustes",
+  "type_here_to_start": "escribe aquí para empezar",
+  "settings": {
+    "coherence": "coherencia",
+    "punctuation": "puntuación",
+    "caps": "mayúsculas",
+    "speak": "hablar"
+  },
+  "stats": {
+    "wpm": "ppm",
+    "accuracy": "exactitud",
+    "word_count": "palabras",
+    "mean_length": "longitud media"
+  },
+  "charts": {
+    "error_rate": "tasa de errores",
+    "characters_typed": "carácteres escritos",
+    "wpm_plot": "gráfica de ppm"
+  }
 }

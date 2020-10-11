@@ -1,4 +1,5 @@
 import {render, html, useState, useEffect} from "./preact.js";
+import {Text} from "./preact-i18n.js";
 import useStoredState from "./useStoredState.js";
 
 export default function TestSettings({onChange}={}) {
@@ -27,7 +28,7 @@ export default function TestSettings({onChange}={}) {
         value=${coherence}  
         onchange=${(event) => setCoherence(Number.parseInt(event.target.value))}
       />
-      <label for="coherence">coherence: ${coherence}</label>
+      <label for="coherence"><${Text} id="settings.coherence">coherence<//>: ${coherence}</label>
     </div>
     <label>
       <input
@@ -35,7 +36,7 @@ export default function TestSettings({onChange}={}) {
         checked=${punctuation}
         onChange=${(e) => setPunctuation(e.target.checked)}
       />
-      punctuation
+      <${Text} id="settings.punctuation">punctuation<//>
     </label>
     <label>
       <input
@@ -43,7 +44,7 @@ export default function TestSettings({onChange}={}) {
         checked=${caps}
         onChange=${(e) => setCaps(e.target.checked)}
       />
-      caps
+      <${Text} id="settings.caps">caps<//>
     </label>
     <label>
       <input
@@ -51,7 +52,7 @@ export default function TestSettings({onChange}={}) {
         checked=${enableSpeech}
         onChange=${(e) => setEnableSpeech(e.target.checked)}
       />
-      speak
+      <${Text} id="settings.speak">speak<//>
     </label>
   `;
 }
