@@ -48,6 +48,15 @@ button:active {
 	box-shadow: 4px 4px 0 var(--col-good);
 }
 
+select {
+	background: var(--col-bg);
+	color: var(--col-a1);
+	font-family: "Inconsolata";
+	font-size: 1.25rem;
+	border: 0.1em solid var(--col-a1);
+	padding: 0em 0.2em;
+}
+
 .main-content {
 	max-width: 900px;
 	margin: auto;
