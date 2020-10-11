@@ -2,9 +2,9 @@ import {html, useState, useMemo} from "./preact.js";
 
 const defaultFormatter = (value) => value.toLocaleString(undefined, {maximumFractionDigits: 2});
 
-export default function BarChart({style, data, labels, formatter=defaultFormatter, horizontal, title}={}) {
+export default function BarChart({style, data, labels, formatter=defaultFormatter, horizontal, title, axisLabelDivisions=5}={}) {
   const [tooltipIndex, setTooltipIndex] = useState(-1);
-  const barSpacing = 0.1;
+  const barSpacing = 0.15;
   const margin = 0.1;
 
   const width = 1;
@@ -21,19 +21,6 @@ export default function BarChart({style, data, labels, formatter=defaultFormatte
   const spacePerBar = barSpacing / count;
   const barWidth = (plotWidth - spacePerBar) / count - spacePerBar;
 
-  const mainAxisLabelProps = {};
-  if (horizontal) {
-    mainAxisLabelProps["x"] = right;
-    mainAxisLabelProps["y"] = bottom;
-    mainAxisLabelProps["text-anchor"] = "start";
-    mainAxisLabelProps["dominant-baseline"] = "middle";
-  } else {
-    mainAxisLabelProps["x"] = left - 0.01;
-    mainAxisLabelProps["y"] = top;
-    mainAxisLabelProps["text-anchor"] = "end";
-    mainAxisLabelProps["dominant-baseline"] = "hanging";
-  }
-  const mainAxisLabelText = formatter(max);
   const axes = html`
     <line
       class="barchart-axis"
@@ -49,9 +36,41 @@ export default function BarChart({style, data, labels, formatter=defaultFormatte
       x2=${right}
       y2=${bottom}
     />
-    <text class="barchart-label barchart-label-bg" ...${mainAxisLabelProps} >${mainAxisLabelText}</text>
-    <text class="barchart-label" ...${mainAxisLabelProps} >${mainAxisLabelText}</text>
   `;
+
+  const axisLabels = Array.from({length: axisLabelDivisions}).map((_, i) => {
+    const frac = i === 0 ? 0 : i / (axisLabelDivisions - 1);
+    const labelText = formatter(frac * max);
+    const labelProps = {};
+    if (horizontal) {
+      labelProps["x"] = left + frac * plotWidth;
+      labelProps["y"] = bottom + 0.02;
+      labelProps["text-anchor"] = "middle";
+      labelProps["dominant-baseline"] = "hanging";
+    } else {
+      labelProps["x"] = left - 0.02;
+      labelProps["y"] = bottom - frac * plotHeight;
+      labelProps["text-anchor"] = "end";
+      labelProps["dominant-baseline"] = "middle";
+    }
+
+    const lineProps = {};
+    if (horizontal) {
+      lineProps.y1 = top;
+      lineProps.y2 = bottom;
+      lineProps.x1 = lineProps.x2 = left + frac * plotWidth;
+    } else {
+      lineProps.x1 = left;
+      lineProps.x2 = right;
+      lineProps.y1 = lineProps.y2 = bottom - frac * plotHeight;
+    }
+
+    return html`
+      ${i < axisLabelDivisions - 1 && html`<line class="barchart-guide-line" ...${lineProps} />`}
+      <text class="barchart-label barchart-label-bg" ...${labelProps} >${labelText}</text>
+      <text class="barchart-label" ...${labelProps} >${labelText}</text>
+    `;
+  });
 
   const barDimensions = (value, i) => {
     const mainSize = horizontal ? plotWidth : plotHeight;
@@ -109,7 +128,7 @@ export default function BarChart({style, data, labels, formatter=defaultFormatte
 
     const cls = i === tooltipIndex ? "" : "barchart-label-hidden";
     return html`
-      <g class="barchart-label ${cls}">
+      <g key=${i} class="barchart-label ${cls}">
         <text class="barchart-label-bg" ...${textProps}>${label}</text>
         <text ...${textProps}>${label}</text>
       </g>
@@ -153,6 +172,7 @@ export default function BarChart({style, data, labels, formatter=defaultFormatte
     <div style=${{display: "inline-flex", flexDirection: "column"}}>
       ${titleElem}
       <svg viewBox="0 0 1 1" style=${style ?? {}}>
+        ${axisLabels}
         ${bars}
         ${axes}
         ${valueLabels}
